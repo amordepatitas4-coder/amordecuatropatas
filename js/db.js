@@ -564,6 +564,15 @@ class DatabaseManager {
         return `${prefix}-${Date.now().toString(36)}-${Math.random().toString(36).substr(2, 5)}`;
     }
 
+    /**
+     * Sincronización asíncrona hacia Supabase Cloud
+     */
+    syncCloudRecord(table, record) {
+        if (window.SupabaseClient && typeof window.SupabaseClient.upsert === 'function') {
+            window.SupabaseClient.upsert(table, record);
+        }
+    }
+
     // =========================================================================
     // MÉTODOS: GESTIÓN DE ANIMALES (RF-02, RF-03)
     // =========================================================================
@@ -680,6 +689,7 @@ class DatabaseManager {
                 }
                 this.db.animales[index] = { ...this.db.animales[index], ...animalData };
                 this.save();
+                this.syncCloudRecord('animales', this.db.animales[index]);
                 return this.db.animales[index];
             }
         } else {
@@ -694,6 +704,7 @@ class DatabaseManager {
             // Registrar estado inicial
             this.addEstadoHistorial(nuevoAnimal.id, nuevoAnimal.estado_actual || 'rescate', 'Ingreso inicial a la Fundación');
             this.save();
+            this.syncCloudRecord('animales', nuevoAnimal);
             return nuevoAnimal;
         }
     }
@@ -708,6 +719,7 @@ class DatabaseManager {
         animal.estado_actual = nuevoEstado;
         this.addEstadoHistorial(animalId, nuevoEstado, observaciones);
         this.save();
+        this.syncCloudRecord('animales', animal);
         return animal;
     }
 
@@ -896,6 +908,7 @@ class DatabaseManager {
             if (idx !== -1) {
                 this.db.cuestionarios_adopcion[idx] = { ...this.db.cuestionarios_adopcion[idx], ...cuestionarioData };
                 this.save();
+                this.syncCloudRecord('cuestionarios_adopcion', this.db.cuestionarios_adopcion[idx]);
                 return this.db.cuestionarios_adopcion[idx];
             }
         }
@@ -907,6 +920,7 @@ class DatabaseManager {
         };
         this.db.cuestionarios_adopcion.unshift(nuevo);
         this.save();
+        this.syncCloudRecord('cuestionarios_adopcion', nuevo);
         return nuevo;
     }
 
@@ -916,6 +930,7 @@ class DatabaseManager {
         item.estado_evaluacion = nuevoEstado;
         if (notasEvaluacion) item.notas_evaluacion = notasEvaluacion;
         this.save();
+        this.syncCloudRecord('cuestionarios_adopcion', item);
         return item;
     }
 
@@ -998,6 +1013,7 @@ class DatabaseManager {
                     updated_at: new Date().toISOString()
                 };
                 this.save();
+                this.syncCloudRecord('proyectos_esterilizacion', this.db.proyectos_esterilizacion[index]);
                 return this.db.proyectos_esterilizacion[index];
             }
         }
@@ -1011,6 +1027,7 @@ class DatabaseManager {
         };
         this.db.proyectos_esterilizacion.unshift(nuevo);
         this.save();
+        this.syncCloudRecord('proyectos_esterilizacion', nuevo);
         return nuevo;
     }
 
@@ -1019,6 +1036,7 @@ class DatabaseManager {
         if (proyecto) {
             proyecto.activo = false;
             this.save();
+            this.syncCloudRecord('proyectos_esterilizacion', proyecto);
             return true;
         }
         return false;
@@ -1049,6 +1067,7 @@ class DatabaseManager {
                     updated_at: new Date().toISOString()
                 };
                 this.save();
+                this.syncCloudRecord('animales_esterilizacion', this.db.animales_esterilizacion[index]);
                 return this.db.animales_esterilizacion[index];
             }
         }
@@ -1065,6 +1084,7 @@ class DatabaseManager {
         };
         this.db.animales_esterilizacion.push(nuevo);
         this.save();
+        this.syncCloudRecord('animales_esterilizacion', nuevo);
         return nuevo;
     }
 
