@@ -1,0 +1,1672 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Sistema Web de Gestión — Fundación Amor de Cuatro Patas (Proyecto A+S)">
+    <title>Fundación Amor de Cuatro Patas | Sistema Web de Gestión</title>
+    <link rel="stylesheet" href="index.css">
+</head>
+<body>
+    <section id="auth-gate" class="auth-gate" aria-labelledby="auth-title">
+        <div class="auth-card">
+            <div class="auth-brand" aria-hidden="true">🐾</div>
+            <h1 id="auth-title">Acceso al sistema de gestión</h1>
+            <p class="auth-intro">Información interna de la Fundación Amor de Cuatro Patas</p>
+
+            <div id="auth-setup-panel" hidden>
+                <h2>Configuración inicial</h2>
+                <p>Crea una contraseña distinta para cada usuaria autorizada. Se solicitará una sola vez en este dispositivo.</p>
+                <form id="auth-setup-form">
+                    <div class="form-group">
+                        <label for="setup-president-password">Contraseña de la Presidenta</label>
+                        <input id="setup-president-password" class="form-control" type="password" minlength="10" autocomplete="new-password" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="setup-president-confirm">Confirmar contraseña de la Presidenta</label>
+                        <input id="setup-president-confirm" class="form-control" type="password" minlength="10" autocomplete="new-password" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="setup-treasurer-password">Contraseña de la Tesorera</label>
+                        <input id="setup-treasurer-password" class="form-control" type="password" minlength="10" autocomplete="new-password" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="setup-treasurer-confirm">Confirmar contraseña de la Tesorera</label>
+                        <input id="setup-treasurer-confirm" class="form-control" type="password" minlength="10" autocomplete="new-password" required>
+                    </div>
+                    <p id="auth-setup-error" class="auth-error" role="alert"></p>
+                    <button class="btn btn-primary full-width" type="submit">Crear accesos protegidos</button>
+                </form>
+            </div>
+
+            <div id="auth-login-panel" hidden>
+                <h2>Iniciar sesión</h2>
+                <p id="auth-login-info" class="auth-info" aria-live="polite"></p>
+                <form id="auth-login-form">
+                    <div class="form-group">
+                        <label for="auth-role">Usuaria autorizada</label>
+                        <select id="auth-role" class="form-control" autocomplete="username">
+                            <option value="presidenta">Presidenta de la Fundación</option>
+                            <option value="tesorera">Tesorera de la Fundación</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="auth-password">Contraseña</label>
+                        <input id="auth-password" class="form-control" type="password" autocomplete="current-password" required>
+                    </div>
+                    <p id="auth-login-error" class="auth-error" role="alert"></p>
+                    <button class="btn btn-primary full-width" type="submit">Ingresar</button>
+                </form>
+            </div>
+            <p class="auth-security-note">Sesión local con cierre automático tras 30 minutos de inactividad.</p>
+        </div>
+    </section>
+
+    <div id="secured-app" hidden>
+    <div class="app-layout">
+        <!-- BARRA LATERAL (SIDEBAR DE NAVEGACIÓN) -->
+        <aside class="app-sidebar" id="app-sidebar" aria-label="Navegación principal">
+            <div class="sidebar-brand">
+                <div class="brand-badge">🐾</div>
+                <div class="brand-text">
+                    <h2>Amor de Cuatro Patas</h2>
+                    <span class="brand-tag">Gestión A+S • MVP</span>
+                </div>
+            </div>
+
+            <nav class="sidebar-menu">
+                <a href="#dashboard" class="sidebar-nav-item active" data-target="section-dashboard">
+                    <span class="nav-icon">📊</span>
+                    <span class="nav-text">Panel Principal</span>
+                </a>
+                <a href="#animales" class="sidebar-nav-item" data-target="section-animales">
+                    <span class="nav-icon">🐶</span>
+                    <span class="nav-text">Fichas de Animales</span>
+                </a>
+                <a href="#salud" class="sidebar-nav-item" data-target="section-salud">
+                    <span class="nav-icon">🩺</span>
+                    <span class="nav-text">Historial Sanitario</span>
+                </a>
+                <a href="#hogares" class="sidebar-nav-item" data-target="section-hogares">
+                    <span class="nav-icon">🏡</span>
+                    <span class="nav-text">Hogares Temporales</span>
+                </a>
+                <a href="#adopciones" class="sidebar-nav-item" data-target="section-adopciones">
+                    <span class="nav-icon">🤝</span>
+                    <span class="nav-text">Adopciones y Seguimiento</span>
+                </a>
+                <a href="#esterilizaciones" class="sidebar-nav-item" data-target="section-esterilizaciones">
+                    <span class="nav-icon">✂️</span>
+                    <span class="nav-text">Esterilización Masiva</span>
+                </a>
+                <a href="#gastos" class="sidebar-nav-item" data-target="section-gastos">
+                    <span class="nav-icon">💰</span>
+                    <span class="nav-text">Gestión de Gastos</span>
+                </a>
+                <a href="#difusion" class="sidebar-nav-item" data-target="section-difusion">
+                    <span class="nav-icon">✨</span>
+                    <span class="nav-text">Difusión y Flyers</span>
+                </a>
+                <a href="#documentos" class="sidebar-nav-item" data-target="section-documentos">
+                    <span class="nav-icon">📁</span>
+                    <span class="nav-text">Documentos Digitales</span>
+                </a>
+                <a href="#reportes" class="sidebar-nav-item" data-target="section-reportes">
+                    <span class="nav-icon">📈</span>
+                    <span class="nav-text">Informes y Métricas</span>
+                </a>
+            </nav>
+
+            <div class="sidebar-footer">
+                <button class="btn btn-secondary btn-sm full-width" onclick="App.exportBackup()" style="margin-bottom: 0.5rem;">
+                    💾 Exportar Respaldo JSON
+                </button>
+                <button class="btn btn-secondary btn-sm full-width" onclick="document.getElementById('import-backup-input').click()" style="margin-bottom: 0.5rem;">
+                    📥 Importar Respaldo JSON
+                </button>
+                <input type="file" id="import-backup-input" accept=".json" style="display:none;" onchange="App.handleImportBackup(event)">
+                <button class="btn btn-outline-danger btn-sm" onclick="App.resetDemoData()">
+                    🔄 Reiniciar Datos Demo
+                </button>
+            </div>
+        </aside>
+
+        <!-- CONTENIDO PRINCIPAL -->
+        <div class="app-main-wrapper">
+            <!-- HEADER SUPERIOR -->
+            <header class="app-topbar">
+                <div class="topbar-title">
+                    <button id="mobile-menu-toggle" class="mobile-menu-toggle" type="button" aria-label="Abrir menú" aria-controls="app-sidebar" aria-expanded="false">☰</button>
+                    <span class="badge-role">Acceso Autorizado</span>
+                    <h1 id="topbar-page-title">Sistema de Gestión y Trazabilidad</h1>
+                </div>
+
+                <div class="topbar-actions">
+                    <div class="user-profile-badge">
+                        <span class="user-avatar">👤</span>
+                        <div class="user-info">
+                            <strong id="user-active-name">Presidenta de la Fundación</strong>
+                            <small class="text-muted">Permiso Total</small>
+                        </div>
+                        <button id="btn-auth-logout" class="btn-icon-switch" title="Cerrar sesión" aria-label="Cerrar sesión">
+                            ↪
+                        </button>
+                    </div>
+                </div>
+            </header>
+
+            <!-- CONTENEDOR DE SECCIONES (SPA) -->
+            <main class="app-content-body">
+
+                <!-- 1. SECCIÓN: DASHBOARD (PANEL PRINCIPAL) -->
+                <section id="section-dashboard" class="app-section active">
+                    <div class="section-hero-banner">
+                        <div>
+                            <h2>Bienvenida al Sistema de Gestión 🐾</h2>
+                            <p>Supervisa el estado de los animales rescatados, atenciones sanitarias, gastos y procesos de adopción activa.</p>
+                        </div>
+                        <button class="btn btn-primary" onclick="AnimalsModule.openAnimalModal()">
+                            ➕ Registrar Nuevo Rescate
+                        </button>
+                    </div>
+
+                    <!-- Métricas / KPIs -->
+                    <div class="kpi-grid">
+                        <div class="card kpi-card">
+                            <span class="kpi-icon icon-blue">🐕</span>
+                            <div class="kpi-data">
+                                <h3 id="kpi-total-rescatados">0</h3>
+                                <p>Total Animales Registrados</p>
+                            </div>
+                        </div>
+
+                        <div class="card kpi-card">
+                            <span class="kpi-icon icon-green">🏡</span>
+                            <div class="kpi-data">
+                                <h3 id="kpi-en-adopcion">0</h3>
+                                <p>Disponibles para Adopción</p>
+                            </div>
+                        </div>
+
+                        <div class="card kpi-card">
+                            <span class="kpi-icon icon-purple">❤️</span>
+                            <div class="kpi-data">
+                                <h3 id="kpi-adoptados">0</h3>
+                                <p>Mascotas Adoptadas</p>
+                            </div>
+                        </div>
+
+                        <div class="card kpi-card">
+                            <span class="kpi-icon icon-amber">🩺</span>
+                            <div class="kpi-data">
+                                <h3 id="kpi-en-salud">0</h3>
+                                <p>En Tratamiento / Cuarentena</p>
+                            </div>
+                        </div>
+
+                        <div class="card kpi-card">
+                            <span class="kpi-icon icon-indigo">🏘️</span>
+                            <div class="kpi-data">
+                                <h3 id="kpi-en-hogar">0</h3>
+                                <p>En Hogares Temporales</p>
+                            </div>
+                        </div>
+
+                        <div class="card kpi-card">
+                            <span class="kpi-icon icon-emerald">💵</span>
+                            <div class="kpi-data">
+                                <h3 id="kpi-total-gastos">$0</h3>
+                                <p>Inversión en Rescates</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Accesos Rápidos y Resumen -->
+                    <div class="dashboard-grid-dual">
+                        <div class="card">
+                            <h3>⚡ Accesos Rápidos del Operativo</h3>
+                            <div class="quick-actions-list">
+                                <button class="quick-btn" onclick="App.navigateTo('section-animales')">
+                                    <span>🐶</span>
+                                    <div>
+                                        <strong>Consultar Fichas</strong>
+                                        <small>Buscar y filtrar animales rescatados</small>
+                                    </div>
+                                </button>
+                                <button class="quick-btn" onclick="HealthModule.openAddHealthModal()">
+                                    <span>💉</span>
+                                    <div>
+                                        <strong>Registrar Atención Médica</strong>
+                                        <small>Vacunación, control o esterilización</small>
+                                    </div>
+                                </button>
+                                <button class="quick-btn" onclick="App.navigateTo('section-difusion')">
+                                    <span>✨</span>
+                                    <div>
+                                        <strong>Generar Flyer y Borrador</strong>
+                                        <small>Crear afiche de adopción descargable</small>
+                                    </div>
+                                </button>
+                                <button class="quick-btn" onclick="ExpensesModule.openNewExpenseModal()">
+                                    <span>🧾</span>
+                                    <div>
+                                        <strong>Registrar Gasto o Boleta</strong>
+                                        <small>Asignar costo a un rescate o general</small>
+                                    </div>
+                                </button>
+                            </div>
+                        </div>
+
+                        <div class="card">
+                            <h3>📊 Inversión Financiera por Categoría</h3>
+                            <div id="report-gastos-breakdown" class="report-breakdown-container">
+                                <!-- Se rellena dinámicamente -->
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- 2. SECCIÓN: GESTIÓN DE FICHAS DE ANIMALES (RF-02, RF-03) -->
+                <section id="section-animales" class="app-section">
+                    <div class="section-header-row">
+                        <div>
+                            <h2>Fichas de Animales Rescatados</h2>
+                            <p>Administra los antecedentes completos de cada animal y supervisa su ciclo de vida.</p>
+                        </div>
+                        <button class="btn btn-primary" id="btn-new-animal">
+                            ➕ Registrar Rescate
+                        </button>
+                    </div>
+
+                    <!-- Filtros y Búsqueda -->
+                    <div class="toolbar-box">
+                        <div class="search-box-wrap">
+                            <span class="search-icon">🔍</span>
+                            <input type="text" id="animal-search-input" placeholder="Buscar por nombre, raza o especie...">
+                        </div>
+
+                        <div class="filters-chips-wrap" id="animal-status-filters">
+                            <button class="filter-btn active" data-status="todos">Todos</button>
+                            <button class="filter-btn" data-status="disponible">Disponibles</button>
+                            <button class="filter-btn" data-status="hogar_temporal">Hogares Temporales</button>
+                            <button class="filter-btn" data-status="cuarentena">Cuarentena / Salud</button>
+                            <button class="filter-btn" data-status="rescate">Rescate Inicial</button>
+                            <button class="filter-btn" data-status="adoptado">Adoptados (Histórico)</button>
+                        </div>
+                    </div>
+
+                    <!-- Grilla de Tarjetas -->
+                    <div class="animals-grid" id="animals-grid-container">
+                        <!-- Se llena vía js/modules/animals.js -->
+                    </div>
+                </section>
+
+                <!-- 3. SECCIÓN: HISTORIAL SANITARIO (RF-04) -->
+                <section id="section-salud" class="app-section">
+                    <div class="section-header-row">
+                        <div>
+                            <h2>Historial Sanitario y Atenciones Clínicas</h2>
+                            <p>Registro cronológico de vacunas, desparasitaciones, cirugías y tratamientos veterinarios.</p>
+                        </div>
+                        <button class="btn btn-primary" id="btn-new-health-global">
+                            ➕ Registrar Atención Médica
+                        </button>
+                    </div>
+
+                    <div class="card table-card">
+                        <div class="table-responsive">
+                            <table class="data-table">
+                                <thead>
+                                    <tr>
+                                        <th>Fecha</th>
+                                        <th>Mascota</th>
+                                        <th>Tipo Evento</th>
+                                        <th>Procedimiento / Tratamiento</th>
+                                        <th>Veterinario / Clínica</th>
+                                        <th>Próximo Control</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="health-table-body">
+                                    <!-- Render dinámico -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- 4. SECCIÓN: HOGARES TEMPORALES (RF-05) -->
+                <section id="section-hogares" class="app-section">
+                    <div class="section-header-row">
+                        <div>
+                            <h2>Hogares Temporales y Familias de Paso</h2>
+                            <p>Gestión de cuidadores voluntarios, capacidad de hospedaje y animales actualmente acogidos.</p>
+                        </div>
+                        <button class="btn btn-primary" id="btn-new-home">
+                            ➕ Registrar Nuevo Hogar
+                        </button>
+                    </div>
+
+                    <div class="homes-grid" id="homes-grid-container">
+                        <!-- Render dinámico -->
+                    </div>
+                </section>
+
+                <!-- 5. SECCIÓN: ADOPCIONES Y SEGUIMIENTO (RF-07, RF-08) -->
+                <section id="section-adopciones" class="app-section">
+                    <div class="section-header-row">
+                        <div>
+                            <h2>Procesos de Adopción y Seguimientos</h2>
+                            <p>Registro de adoptantes, contratos de tenencia responsable y seguimiento acumulativo post-entrega.</p>
+                        </div>
+                        <div class="header-right-actions">
+                            <button class="btn btn-secondary" onclick="AdoptionsModule.openCuestionarioModal()">
+                                📝 Evaluar Postulación (Cuestionario)
+                            </button>
+                            <button class="btn btn-accent" onclick="AdoptionsModule.openAdoptionModal()">
+                                🤝 Concretar Adopción
+                            </button>
+                        </div>
+                    </div>
+ 
+                    <!-- SUB-PESTAÑAS DE ADOPCIÓN (CONTRATOS vs POSTULACIONES) -->
+                    <div class="subtabs-bar">
+                        <button class="subtab-btn active" id="subtab-btn-adopciones" onclick="AdoptionsModule.switchSubTab('adopciones')">
+                            🤝 Adopciones Concretadas (<span id="count-adopciones">0</span>)
+                        </button>
+                        <button class="subtab-btn" id="subtab-btn-cuestionarios" onclick="AdoptionsModule.switchSubTab('cuestionarios')">
+                            📋 Postulaciones y Cuestionarios Digitales (<span id="count-cuestionarios">0</span>)
+                        </button>
+                    </div>
+
+                    <!-- TAB 1: ADOPCIONES CONCRETADAS -->
+                    <div id="subtab-content-adopciones">
+                        <div class="card table-card">
+                            <div class="table-responsive">
+                                <table class="data-table">
+                                    <thead>
+                                        <tr>
+                                            <th>Fecha Adopción</th>
+                                            <th>Mascota</th>
+                                            <th>Adoptante Responsable</th>
+                                            <th>Folio Contrato</th>
+                                            <th>Seguimientos</th>
+                                            <th>Acción</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="adoptions-table-body">
+                                        <!-- Render dinámico -->
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- TAB 2: POSTULACIONES Y CUESTIONARIOS DIGITALES EVALUADOS -->
+                    <div id="subtab-content-cuestionarios" style="display: none;">
+                        <div class="toolbar-box">
+                            <label>Filtrar Evaluación:</label>
+                            <select id="cuestionario-filter-estado" class="form-control-sm" onchange="AdoptionsModule.renderCuestionarios()">
+                                <option value="todos">Todas las postulaciones</option>
+                                <option value="aprobado">🌟 Aprobadas</option>
+                                <option value="requiere_entrevista">⚠️ Requiere Entrevista / Pendiente</option>
+                                <option value="no_recomendado">❌ Con Observaciones</option>
+                            </select>
+                        </div>
+                        <div class="card table-card">
+                            <div class="table-responsive">
+                                <table class="data-table">
+                                    <thead>
+                                        <tr>
+                                            <th>Fecha</th>
+                                            <th>Postulante</th>
+                                            <th>Contacto</th>
+                                            <th>Mascota de Interés</th>
+                                            <th>Evaluación / Puntaje</th>
+                                            <th>Acciones</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="cuestionarios-table-body">
+                                        <!-- Render dinámico -->
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- 6. SECCIÓN: GESTIÓN DE PROYECTOS DE ESTERILIZACIÓN MASIVA (ÁREA FUNCIONAL 2 — FICHA TÉCNICA §5) -->
+                <section id="section-esterilizaciones" class="app-section">
+                    <div class="section-hero-banner" style="background: linear-gradient(135deg, #0284c7 0%, #0369a1 100%);">
+                        <div>
+                            <h2>Operativos de Esterilización Masiva ✂️</h2>
+                            <p>Gestión de campañas sanitarias en terreno para animales comunitarios y en situación de calle. Proceso independiente al flujo de adopción.</p>
+                        </div>
+                        <button class="btn btn-primary" onclick="EsterilizacionesModule.abrirModalProyecto()" style="background: #ffffff; color: #0369a1; border: none; font-weight: 700;">
+                            ➕ Planificar Nuevo Operativo
+                        </button>
+                    </div>
+
+                    <!-- Métricas del Módulo de Esterilización -->
+                    <div class="kpi-grid">
+                        <div class="card kpi-card">
+                            <span class="kpi-icon icon-blue">📋</span>
+                            <div class="kpi-data">
+                                <h3 id="kpi-est-total-operativos">0</h3>
+                                <p>Operativos Registrados</p>
+                            </div>
+                        </div>
+
+                        <div class="card kpi-card">
+                            <span class="kpi-icon icon-green">✂️</span>
+                            <div class="kpi-data">
+                                <h3 id="kpi-est-total-animales">0</h3>
+                                <p>Pacientes Esterilizados</p>
+                            </div>
+                        </div>
+
+                        <div class="card kpi-card">
+                            <span class="kpi-icon icon-purple">🐶🐱</span>
+                            <div class="kpi-data">
+                                <h3 style="font-size: 1.1rem; margin-top: 0.2rem;"><span id="kpi-est-caninos">0 caninos</span> • <span id="kpi-est-felinos">0 felinos</span></h3>
+                                <p>Distribución por Especie</p>
+                            </div>
+                        </div>
+
+                        <div class="card kpi-card">
+                            <span class="kpi-icon icon-amber">🏷️</span>
+                            <div class="kpi-data">
+                                <h3 id="kpi-est-microchips">0</h3>
+                                <p>Con Microchip Ley 21.020</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Filtros y Búsqueda -->
+                    <div class="table-actions-toolbar" style="margin-top: 1.5rem; margin-bottom: 1.5rem; display: flex; gap: 1rem; flex-wrap: wrap;">
+                        <div class="search-input-group" style="flex: 1; max-width: 450px;">
+                            <span class="search-icon">🔍</span>
+                            <input type="text" id="buscar-esterilizaciones" placeholder="Buscar por operativo, sector o veterinario..." class="form-control">
+                        </div>
+                        <div class="filters-group" style="display: flex; gap: 0.5rem;">
+                            <select id="filtro-esterilizaciones-estado" class="form-control">
+                                <option value="todos">Todos los Estados</option>
+                                <option value="Planificado">Planificado</option>
+                                <option value="En Ejecución">En Ejecución</option>
+                                <option value="Finalizado">Finalizado</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <!-- Grilla de Operativos -->
+                    <div id="grid-proyectos-esterilizacion" class="cards-grid" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(340px, 1fr)); gap: 1.5rem;">
+                        <!-- Render dinámico desde js/modules/esterilizaciones.js -->
+                    </div>
+                </section>
+
+                <!-- 7. SECCIÓN: GESTIÓN DE GASTOS (RF-09) -->
+                <section id="section-gastos" class="app-section">
+                    <div class="section-header-row">
+                        <div>
+                            <h2>Control de Gastos y Finanzas</h2>
+                            <p>Registro de costos directos veterinarios, alimentos e insumos de la Fundación.</p>
+                        </div>
+                        <div class="header-right-actions">
+                            <span class="total-badge-label">Gasto Total: <strong id="expenses-total-amount">$0</strong></span>
+                            <button class="btn btn-primary" id="btn-new-expense">
+                                ➕ Registrar Gasto
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="toolbar-box">
+                        <label>Filtrar por Categoría:</label>
+                        <select id="expense-filter-categoria" class="form-control-sm">
+                            <option value="todas">Todas las categorías</option>
+                            <option value="veterinaria">Atención Veterinaria</option>
+                            <option value="alimento">Alimento</option>
+                            <option value="medicamentos">Medicamentos</option>
+                            <option value="transporte">Transporte</option>
+                            <option value="insumos_generales">Insumos Generales</option>
+                        </select>
+                        <label for="expense-filter-from">Desde:</label>
+                        <input id="expense-filter-from" type="date" class="form-control-sm">
+                        <label for="expense-filter-to">Hasta:</label>
+                        <input id="expense-filter-to" type="date" class="form-control-sm">
+                        <label for="expense-filter-animal">Animal:</label>
+                        <select id="expense-filter-animal" class="form-control-sm">
+                            <option value="todos">Todos</option>
+                        </select>
+                    </div>
+
+                    <div class="card table-card">
+                        <div class="table-responsive">
+                            <table class="data-table">
+                                <thead>
+                                    <tr>
+                                        <th>Fecha</th>
+                                        <th>Concepto</th>
+                                        <th>Categoría</th>
+                                        <th>Asignado a</th>
+                                        <th>Monto</th>
+                                        <th>Respaldo</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="expenses-table-body">
+                                    <!-- Render dinámico -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- 7. SECCIÓN: DIFUSIÓN CON IA Y FLYERS (RF-12) -->
+                <section id="section-difusion" class="app-section">
+                    <div class="section-header-row">
+                        <div>
+                            <h2>Herramientas de Difusión y Adopción</h2>
+                            <p>Prepara borradores editables y afiches gráficos listos para descargar.</p>
+                        </div>
+                    </div>
+
+                    <div class="diffusion-layout">
+                        <!-- Panel Izquierdo: Configuración e IA -->
+                        <div class="diffusion-controls card">
+                            <h3>1. Asistente local de redacción</h3>
+                            <p class="implementation-status">Modo previo a conexión: usa plantillas locales. La integración con IA se habilitará mediante un servicio autenticado.</p>
+                            <div class="form-group">
+                                <label for="diffusion-animal-select">Mascota a Difundir:</label>
+                                <select id="diffusion-animal-select" class="form-control">
+                                    <!-- Opciones dinámicas -->
+                                </select>
+                            </div>
+
+                            <div class="form-row-2">
+                                <div class="form-group">
+                                    <label>Tono del Mensaje:</label>
+                                    <select id="diffusion-tone-select" class="form-control">
+                                        <option value="emotivo">Emotivo y Tierno</option>
+                                        <option value="alegre">Alegre y Juguetón</option>
+                                        <option value="formal">Informativo / Formal</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label>Red Social / Canal:</label>
+                                    <select id="diffusion-channel-select" class="form-control">
+                                        <option value="instagram">Instagram (con hashtags)</option>
+                                        <option value="facebook">Facebook / WhatsApp</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <button id="btn-generate-ai-text" class="btn btn-accent full-width">
+                                ✨ Generar Borrador Local
+                            </button>
+
+                            <div class="form-group" style="margin-top: 1.25rem;">
+                                <div class="label-with-action">
+                                    <label>Borrador Generado (Revisión Humana Requerida):</label>
+                                    <button id="btn-copy-ai-text" class="btn-link">📋 Copiar Texto</button>
+                                </div>
+                                <textarea id="diffusion-ai-result" rows="7" class="form-control" placeholder="El borrador local aparecerá aquí para que puedas editarlo antes de usarlo..."></textarea>
+                            </div>
+                        </div>
+
+                        <!-- Panel Derecho: Creador de Flyers en Canvas -->
+                        <div class="diffusion-flyer-preview card">
+                            <div class="card-header-flyer">
+                                <h3>2. Generador de Flyer Gráfico</h3>
+                                <button id="btn-download-flyer" class="btn btn-primary btn-sm">
+                                    ⬇️ Descargar Flyer (PNG)
+                                </button>
+                            </div>
+
+                            <div class="flyer-fields-row">
+                                <select id="flyer-select-theme" class="form-control-sm" onchange="DiffusionModule.drawFlyer()">
+                                    <option value="institucional">🎨 Estilo Institucional</option>
+                                    <option value="urgente">🚨 Caso Urgente</option>
+                                    <option value="cachorro">💖 Cachorro / Ternura</option>
+                                    <option value="senior">💚 Adopción Senior</option>
+                                </select>
+                                <input type="text" id="flyer-input-name" placeholder="Nombre en flyer" class="form-control-sm">
+                                <input type="text" id="flyer-input-age" placeholder="Edad" class="form-control-sm">
+                                <input type="text" id="flyer-input-traits" placeholder="Cualidades destacadas" class="form-control-sm">
+                                <button id="btn-render-flyer" class="btn btn-secondary btn-sm">Actualizar Vista</button>
+                            </div>
+
+                            <!-- Canvas de Renderizado de Flyer -->
+                            <div class="canvas-container">
+                                <canvas id="flyer-canvas" width="480" height="680"></canvas>
+                            </div>
+                            <p class="text-center text-muted small" style="margin-top: 0.5rem;">
+                                💡 El flyer se genera localmente en tu navegador sin consumir espacio de almacenamiento en el servidor.
+                            </p>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- 8. SECCIÓN: GESTIÓN DOCUMENTAL (RF-10) -->
+                <section id="section-documentos" class="app-section">
+                    <div class="section-header-row">
+                        <div>
+                            <h2>Repositorio de Documentos Digitales</h2>
+                            <p>Gestión de formularios oficiales, contratos, cotizaciones y comprobantes enlazados a Google Drive.</p>
+                        </div>
+                        <button class="btn btn-primary" id="btn-new-document">
+                            ➕ Registrar Documento
+                        </button>
+                    </div>
+
+                    <div class="toolbar-box">
+                        <label>Filtrar por Tipo de Documento:</label>
+                        <select id="doc-filter-categoria" class="form-control-sm">
+                            <option value="todas">Todos los documentos</option>
+                            <option value="formulario">Formularios de Adopción</option>
+                            <option value="legal">Contratos y Aspectos Legales</option>
+                            <option value="cotizacion">Cotizaciones y Presupuestos</option>
+                            <option value="comprobante">Comprobantes y Boletas</option>
+                            <option value="administrativo">Administración General</option>
+                        </select>
+                        <label for="doc-filter-relation">Filtrar por relación:</label>
+                        <select id="doc-filter-relation" class="form-control-sm">
+                            <option value="todas">Todas</option>
+                            <option value="animal">Animal</option>
+                            <option value="adopcion">Adopción</option>
+                            <option value="gasto">Gasto</option>
+                            <option value="general">General</option>
+                        </select>
+                    </div>
+
+                    <div class="documents-grid" id="documents-grid-container">
+                        <!-- Render dinámico vía js/modules/documents.js -->
+                    </div>
+                </section>
+
+                <!-- 9. SECCIÓN: INFORMES Y REPORTES (RF-11) -->
+                <section id="section-reportes" class="app-section">
+                    <div class="section-header-row">
+                        <div>
+                            <h2>Informes y Métricas Ejecutivas</h2>
+                            <p>Consolidado de gestión para respaldar postulaciones a proyectos y rendición comunitaria.</p>
+                        </div>
+                        <button class="btn btn-secondary" onclick="ReportsModule.printReport()">
+                            🖨️ Imprimir / Guardar en PDF
+                        </button>
+                    </div>
+
+                    <div class="toolbar-box report-filters" aria-label="Filtros del informe">
+                        <label for="report-filter-from">Desde:</label>
+                        <input id="report-filter-from" type="date" class="form-control-sm">
+                        <label for="report-filter-to">Hasta:</label>
+                        <input id="report-filter-to" type="date" class="form-control-sm">
+                        <label for="report-filter-status">Estado:</label>
+                        <select id="report-filter-status" class="form-control-sm">
+                            <option value="todos">Todos</option>
+                            <option value="rescate">Rescate</option>
+                            <option value="cuarentena">Cuarentena</option>
+                            <option value="hogar_temporal">Hogar temporal</option>
+                            <option value="disponible">Disponible</option>
+                            <option value="evaluacion">En evaluación</option>
+                            <option value="adoptado">Adoptado</option>
+                        </select>
+                        <label for="report-filter-category">Gasto:</label>
+                        <select id="report-filter-category" class="form-control-sm">
+                            <option value="todas">Todas las categorías</option>
+                            <option value="veterinaria">Veterinaria</option>
+                            <option value="alimento">Alimento</option>
+                            <option value="medicamentos">Medicamentos</option>
+                            <option value="transporte">Transporte</option>
+                            <option value="insumos_generales">Insumos generales</option>
+                        </select>
+                        <button id="btn-clear-report-filters" type="button" class="btn btn-secondary btn-sm">Limpiar</button>
+                    </div>
+
+                    <div class="reports-summary-grid">
+                        <div class="card stat-box">
+                            <h4>Tasa de Adopción Responsable</h4>
+                            <div class="stat-number text-accent" id="kpi-tasa-adopcion">0%</div>
+                            <p class="text-muted">Porcentaje de animales que completaron exitosamente su adopción.</p>
+                        </div>
+
+                        <div class="card stat-box">
+                            <h4>Compromiso de Trazabilidad</h4>
+                            <div class="stat-number text-ready">Activo</div>
+                            <p class="text-muted">Ningún registro histórico es eliminado del sistema.</p>
+                        </div>
+                        <div class="card stat-box">
+                            <h4>Animales según filtros</h4>
+                            <div class="stat-number" id="report-filtered-animals">0</div>
+                            <p class="text-muted" id="report-filtered-status-label">Todos los estados</p>
+                        </div>
+                        <div class="card stat-box">
+                            <h4>Gastos según filtros</h4>
+                            <div class="stat-number" id="report-filtered-expenses">$0</div>
+                            <p class="text-muted" id="report-filtered-expenses-count">0 registros</p>
+                        </div>
+                    </div>
+                    <div class="card table-card report-detail-card">
+                        <h3>Detalle de gastos del período</h3>
+                        <div class="table-responsive">
+                            <table class="data-table">
+                                <thead><tr><th>Fecha</th><th>Concepto</th><th>Categoría</th><th>Monto</th></tr></thead>
+                                <tbody id="report-expenses-body"></tbody>
+                            </table>
+                        </div>
+                    </div>
+                </section>
+
+            </main>
+        </div>
+    </div>
+
+    <!-- ====================================================================
+         MODALES GLOBALES DEL SISTEMA
+         ==================================================================== -->
+
+    <!-- MODAL 1: FICHA INTEGRAL DE ANIMAL (Detalle Completo) -->
+    <div id="modal-ficha-integral" class="modal-overlay">
+        <div class="modal-window modal-xl">
+            <div class="modal-top">
+                <h3>📋 Ficha Integral del Rescatado</h3>
+                <button class="modal-close-btn">&times;</button>
+            </div>
+            <div class="modal-body" id="ficha-integral-content">
+                <!-- Se inyecta dinámicamente con pestañas -->
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary btn-modal-cancel">✕ Cerrar Ficha</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL 2: FORMULARIO REGISTRO/EDICIÓN DE ANIMAL -->
+    <div id="modal-animal-form" class="modal-overlay">
+        <div class="modal-window">
+            <div class="modal-top">
+                <h3 id="modal-animal-title">🐾 Registrar Animal</h3>
+                <button class="modal-close-btn">&times;</button>
+            </div>
+            <form id="form-save-animal">
+                <div class="modal-body">
+                    <input type="hidden" id="animal-form-id">
+
+                    <div class="form-row-2">
+                        <div class="form-group">
+                            <label>Nombre Mascota *</label>
+                            <input type="text" id="animal-form-nombre" class="form-control" required placeholder="Ej: Luna">
+                        </div>
+                        <div class="form-group">
+                            <label>Especie</label>
+                            <select id="animal-form-especie" class="form-control">
+                                <option value="Canino">Canino (Perro)</option>
+                                <option value="Felino">Felino (Gato)</option>
+                                <option value="Otro">Otro</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-row-3">
+                        <div class="form-group">
+                            <label>Raza</label>
+                            <input type="text" id="animal-form-raza" class="form-control" placeholder="Mestizo / Quiltro">
+                        </div>
+                        <div class="form-group">
+                            <label>Sexo</label>
+                            <select id="animal-form-sexo" class="form-control">
+                                <option value="Hembra">Hembra</option>
+                                <option value="Macho">Macho</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Edad Estimada</label>
+                            <input type="text" id="animal-form-edad" class="form-control" placeholder="Ej: 1 año 2 meses">
+                        </div>
+                    </div>
+
+                    <div class="form-row-3">
+                        <div class="form-group">
+                            <label>Peso (kg)</label>
+                            <input type="number" step="0.1" id="animal-form-peso" class="form-control" placeholder="12.5">
+                        </div>
+                        <div class="form-group">
+                            <label>Tamaño</label>
+                            <select id="animal-form-tamano" class="form-control">
+                                <option value="Pequeño">Pequeño</option>
+                                <option value="Mediano" selected>Mediano</option>
+                                <option value="Grande">Grande</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Estado en Proceso</label>
+                            <select id="animal-form-estado" class="form-control">
+                                <option value="rescate">Rescate Inicial</option>
+                                <option value="cuarentena">Cuarentena / Salud</option>
+                                <option value="hogar_temporal">Hogar Temporal</option>
+                                <option value="disponible">Disponible Adopción</option>
+                                <option value="evaluacion">En Evaluación</option>
+                                <option value="adoptado">Adoptado</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <!-- FOTOGRAFÍAS OPERATIVAS DUALES (SECCIÓN 10 DEL WORD) -->
+                    <div class="form-group-box">
+                        <label class="form-box-title">📸 Fotografías Operativas de Trabajo (Hasta 2 optimizadas)</label>
+                        <p class="form-box-sub">Se comprimen automáticamente en el navegador para no consumir espacio en exceso. Al concretar la adopción, podrás liberarlas con un clic conservando toda la ficha.</p>
+                        
+                        <div class="form-row-2">
+                            <div class="form-group">
+                                <label>Foto 1 (Principal) *</label>
+                                <div class="photo-input-group">
+                                    <input type="file" id="animal-file-foto1" accept="image/*" class="form-control-file" title="Subir desde tu computador o celular">
+                                    <input type="url" id="animal-form-foto" class="form-control" placeholder="O pega enlace directo / Storage">
+                                </div>
+                                <div id="preview-foto1" class="photo-preview-box"></div>
+                            </div>
+                            <div class="form-group">
+                                <label>Foto 2 (Secundaria / Perfil)</label>
+                                <div class="photo-input-group">
+                                    <input type="file" id="animal-file-foto2" accept="image/*" class="form-control-file" title="Subir foto adicional">
+                                    <input type="url" id="animal-form-foto2" class="form-control" placeholder="O pega enlace directo / Storage">
+                                </div>
+                                <div id="preview-foto2" class="photo-preview-box"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- SANIDAD Y TENENCIA RESPONSABLE (LEY 21.020 Y SECCIÓN 22 DEL WORD) -->
+                    <div class="form-group-box">
+                        <label class="form-box-title">🩺 Sanidad y Tenencia Responsable (Ley 21.020)</label>
+                        <div class="form-row-3">
+                            <div class="form-group">
+                                <label>Esterilización / Castración *</label>
+                                <select id="animal-form-esterilizado" class="form-control">
+                                    <option value="si">✅ Sí, Esterilizado/a</option>
+                                    <option value="no">❌ No Esterilizado/a</option>
+                                    <option value="pendiente" selected>⏳ Pendiente / En tratamiento</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label>Microchip (Ley 21.020)</label>
+                                <input type="text" id="animal-form-microchip" class="form-control" placeholder="Ej: 941000028192831">
+                            </div>
+                            <div class="form-group">
+                                <label>Nivel de Energía</label>
+                                <select id="animal-form-energia" class="form-control">
+                                    <option value="Bajo">🟢 Bajo (Tranquilo)</option>
+                                    <option value="Medio" selected>🟡 Medio (Equilibrado)</option>
+                                    <option value="Alto">🔴 Alto (Muy activo)</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Sociabilidad y Convivencia:</label>
+                            <div class="checkbox-group-row">
+                                <label class="checkbox-inline">
+                                    <input type="checkbox" id="animal-form-ninos" checked> 👶 Apto con Niños
+                                </label>
+                                <label class="checkbox-inline">
+                                    <input type="checkbox" id="animal-form-perros" checked> 🐕 Sociable con Perros
+                                </label>
+                                <label class="checkbox-inline">
+                                    <input type="checkbox" id="animal-form-gatos"> 🐈 Sociable con Gatos
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Carpeta Multimedia Google Drive (Videos y fotos históricas)</label>
+                        <input type="url" id="animal-form-drive" class="form-control" placeholder="https://drive.google.com/drive/folders/...">
+                        <small class="text-muted">Enlace externo para videos de alta resolución y archivos de respaldo.</small>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Historia del Rescate / Antecedentes</label>
+                        <textarea id="animal-form-desc" rows="3" class="form-control" placeholder="Cómo y dónde fue encontrado, estado general..."></textarea>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Carácter y Personalidad</label>
+                        <textarea id="animal-form-personalidad" rows="2" class="form-control" placeholder="Comportamiento con niños, otros animales, paseos..."></textarea>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary btn-modal-cancel">Cancelar</button>
+                    <button type="submit" class="btn btn-primary">Guardar Ficha</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- MODAL 3: AGREGAR ATENCIÓN SANITARIA -->
+    <div id="modal-health-form" class="modal-overlay">
+        <div class="modal-window">
+            <div class="modal-top">
+                <h3>🩺 Registrar Atención Sanitaria</h3>
+                <button class="modal-close-btn">&times;</button>
+            </div>
+            <form id="form-add-health">
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label>Animal Atendido *</label>
+                        <select id="health-form-animal-select" class="form-control" required></select>
+                    </div>
+
+                    <div class="form-row-2">
+                        <div class="form-group">
+                            <label>Tipo de Evento</label>
+                            <select id="health-form-tipo" class="form-control">
+                                <option value="Vacunación">Vacunación</option>
+                                <option value="Desparasitación">Desparasitación</option>
+                                <option value="Esterilización">Esterilización</option>
+                                <option value="Control veterinario">Control Veterinario</option>
+                                <option value="Tratamiento">Tratamiento Clínico</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Fecha Atención</label>
+                            <input type="date" id="health-form-fecha" class="form-control" required>
+                        </div>
+                    </div>
+
+                    <div class="form-row-2">
+                        <div class="form-group">
+                            <label>Veterinario o Clínica</label>
+                            <input type="text" id="health-form-vet" class="form-control" placeholder="Dr. Nombre / Clínica">
+                        </div>
+                        <div class="form-group">
+                            <label>Próximo Control / Dosis (Opcional)</label>
+                            <input type="date" id="health-form-proximo" class="form-control">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Descripción del Procedimiento o Fármaco *</label>
+                        <textarea id="health-form-desc" rows="3" class="form-control" required placeholder="Detalles de la vacuna, dosis, diagnóstico u observaciones..."></textarea>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary btn-modal-cancel">Cancelar</button>
+                    <button type="submit" class="btn btn-primary">Registrar en Ficha</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- MODAL 4: REGISTRAR NUEVO HOGAR TEMPORAL -->
+    <div id="modal-home-form" class="modal-overlay">
+        <div class="modal-window">
+            <div class="modal-top">
+                <h3>🏡 Registrar Hogar Temporal</h3>
+                <button class="modal-close-btn">&times;</button>
+            </div>
+            <form id="form-save-home">
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label>Nombre Cuidador(a) Responsable *</label>
+                        <input type="text" id="home-form-nombre" class="form-control" required placeholder="Ej: Patricia Morales">
+                    </div>
+                    <div class="form-row-2">
+                        <div class="form-group">
+                            <label>Teléfono de Contacto</label>
+                            <input type="text" id="home-form-tel" class="form-control" placeholder="+56 9 ...">
+                        </div>
+                        <div class="form-group">
+                            <label>Tipo de Vivienda</label>
+                            <select id="home-form-tipo" class="form-control">
+                                <option value="Casa con patio cerrado">Casa con patio cerrado</option>
+                                <option value="Departamento">Departamento</option>
+                                <option value="Parcela">Parcela</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-row-2">
+                        <div class="form-group">
+                            <label>Dirección</label>
+                            <input type="text" id="home-form-dir" class="form-control" placeholder="Calle, Número, Comuna">
+                        </div>
+                        <div class="form-group">
+                            <label>Capacidad Máxima</label>
+                            <input type="number" id="home-form-capacidad" class="form-control" value="1" min="1">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Notas / Preferencias (Cachorros, gatos, etc.)</label>
+                        <textarea id="home-form-notas" rows="2" class="form-control"></textarea>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary btn-modal-cancel">Cancelar</button>
+                    <button type="submit" class="btn btn-primary">Guardar Hogar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- MODAL 5: ASIGNAR ANIMAL A HOGAR TEMPORAL -->
+    <div id="modal-assign-home" class="modal-overlay">
+        <div class="modal-window">
+            <div class="modal-top">
+                <h3>🏡 Asignar Mascota a Hogar Temporal</h3>
+                <button class="modal-close-btn">&times;</button>
+            </div>
+            <form id="form-assign-home">
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label>Mascota a Asignar *</label>
+                        <select id="assign-animal-select" class="form-control" required></select>
+                    </div>
+                    <div class="form-group">
+                        <label>Hogar Temporal Destino *</label>
+                        <select id="assign-home-select" class="form-control" required></select>
+                    </div>
+                    <div class="form-group">
+                        <label>Observaciones de Ingreso</label>
+                        <textarea id="assign-observaciones" rows="2" class="form-control" placeholder="Motivo del traslado, cuidados especiales requeridos..."></textarea>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary btn-modal-cancel">Cancelar</button>
+                    <button type="submit" class="btn btn-primary">Confirmar Asignación</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- MODAL 6: CONCRETAR ADOPCIÓN -->
+    <div id="modal-adoption-form" class="modal-overlay">
+        <div class="modal-window">
+            <div class="modal-top">
+                <h3>🤝 Concretar Proceso de Adopción</h3>
+                <button class="modal-close-btn">&times;</button>
+            </div>
+            <form id="form-save-adoption">
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label>Mascota Adoptada *</label>
+                        <select id="adoption-animal-select" class="form-control" required></select>
+                    </div>
+
+                    <h4>Datos del Adoptante Responsable</h4>
+                    <div class="form-row-2">
+                        <div class="form-group">
+                            <label>Nombre Completo *</label>
+                            <input type="text" id="adoption-adoptante-nombre" class="form-control" required placeholder="Nombre y Apellidos">
+                        </div>
+                        <div class="form-group">
+                            <label>RUT / Identificación</label>
+                            <input type="text" id="adoption-adoptante-rut" class="form-control" placeholder="12.345.678-9">
+                        </div>
+                    </div>
+
+                    <div class="form-row-2">
+                        <div class="form-group">
+                            <label>Teléfono *</label>
+                            <input type="text" id="adoption-adoptante-tel" class="form-control" required placeholder="+56 9 ...">
+                        </div>
+                        <div class="form-group">
+                            <label>Correo Electrónico</label>
+                            <input type="email" id="adoption-adoptante-email" class="form-control" placeholder="correo@ejemplo.com">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Dirección del Hogar Definitivo</label>
+                        <input type="text" id="adoption-adoptante-dir" class="form-control" placeholder="Calle, Número, Comuna">
+                    </div>
+
+                    <div class="form-row-2">
+                        <div class="form-group">
+                            <label>Fecha de Entrega</label>
+                            <input type="date" id="adoption-fecha" class="form-control" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Folio del Contrato</label>
+                            <input type="text" id="adoption-folio" class="form-control">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Observaciones / Acuerdos</label>
+                        <textarea id="adoption-observaciones" rows="2" class="form-control" placeholder="Entrega de carnet de vacunas, compromiso de esterilización si aplica..."></textarea>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary btn-modal-cancel">Cancelar</button>
+                    <button type="submit" class="btn btn-accent">✅ Aceptar y Formalizar Adopción</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- MODAL 7: AGREGAR SEGUIMIENTO POST-ADOPCIÓN -->
+    <div id="modal-seguimiento-form" class="modal-overlay">
+        <div class="modal-window">
+            <div class="modal-top">
+                <h3>📝 Registro de Seguimiento Post-Adopción</h3>
+                <button class="modal-close-btn">&times;</button>
+            </div>
+            <form id="form-add-seguimiento">
+                <div class="modal-body">
+                    <input type="hidden" id="seg-adopcion-id">
+                    <input type="hidden" id="seg-animal-id">
+
+                    <div class="form-row-2">
+                        <div class="form-group">
+                            <label>Fecha de Contacto</label>
+                            <input type="date" id="seg-fecha" class="form-control" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Medio de Contacto</label>
+                            <select id="seg-medio" class="form-control">
+                                <option value="WhatsApp / Fotos">WhatsApp / Fotos</option>
+                                <option value="Llamada Telefónica">Llamada Telefónica</option>
+                                <option value="Visita Presencial">Visita Presencial</option>
+                                <option value="Correo Electrónico">Correo Electrónico</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Estado General de la Mascota</label>
+                        <select id="seg-estado" class="form-control">
+                            <option value="Excelente">Excelente (Adaptado y saludable)</option>
+                            <option value="Muy Bien">Muy Bien</option>
+                            <option value="En Adaptación">En Adaptación (Monitoreo continuo)</option>
+                            <option value="Con Observaciones">Con Observaciones / Dificultades</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Observaciones del Seguimiento *</label>
+                        <textarea id="seg-observaciones" rows="3" class="form-control" required placeholder="Relato del adoptante, alimentación, comportamiento, fotos recibidas..."></textarea>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary btn-modal-cancel">Cancelar</button>
+                    <button type="submit" class="btn btn-primary">Guardar Seguimiento</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- MODAL 8: REGISTRO DE GASTOS -->
+    <div id="modal-expense-form" class="modal-overlay">
+        <div class="modal-window">
+            <div class="modal-top">
+                <h3>💰 Registrar Gasto de la Fundación</h3>
+                <button class="modal-close-btn">&times;</button>
+            </div>
+            <form id="form-save-expense">
+                <div class="modal-body">
+                    <div class="form-row-2">
+                        <div class="form-group">
+                            <label>Fecha del Gasto *</label>
+                            <input type="date" id="expense-form-fecha" class="form-control" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Monto ($ CLP) *</label>
+                            <input type="number" id="expense-form-monto" class="form-control" min="1" required placeholder="35000">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Concepto o Detalle *</label>
+                        <input type="text" id="expense-form-concepto" class="form-control" required placeholder="Ej: Atención de urgencia, Saco comida 20kg...">
+                    </div>
+
+                    <div class="form-row-2">
+                        <div class="form-group">
+                            <label>Categoría del Gasto</label>
+                            <select id="expense-form-categoria" class="form-control">
+                                <option value="veterinaria">Atención Veterinaria</option>
+                                <option value="alimento">Alimento</option>
+                                <option value="medicamentos">Medicamentos</option>
+                                <option value="transporte">Transporte / Traslados</option>
+                                <option value="insumos_generales">Insumos Generales</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Tipo de Asignación</label>
+                            <select id="expense-form-tipo-asig" class="form-control">
+                                <option value="animal_unico">Asociado a un animal individual</option>
+                                <option value="multiples_animales">Compartido entre varios animales</option>
+                                <option value="general_fundacion">Gasto General de la Fundación</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-group" id="expense-animals-group">
+                        <label>Seleccionar Animal(es) Vinculado(s):</label>
+                        <select id="expense-form-animals" class="form-control" multiple style="height: 100px;">
+                            <!-- Opciones dinámicas -->
+                        </select>
+                        <small class="text-muted">Mantén presionada la tecla Ctrl (o Cmd en Mac) para seleccionar más de uno.</small>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Enlace a Comprobante / Boleta en Drive (Opcional)</label>
+                        <input type="url" id="expense-form-comprobante" class="form-control" placeholder="https://drive.google.com/file/d/...">
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary btn-modal-cancel">Cancelar</button>
+                    <button type="submit" class="btn btn-primary">Registrar Gasto</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- MODAL 9: REGISTRO DE DOCUMENTOS DIGITALES -->
+    <div id="modal-document-form" class="modal-overlay">
+        <div class="modal-window">
+            <div class="modal-top">
+                <h3 id="modal-doc-form-title">📁 Registrar Documento Digital</h3>
+                <button class="modal-close-btn">&times;</button>
+            </div>
+            <form id="form-save-document">
+                <input type="hidden" id="doc-form-id">
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label>Título del Documento *</label>
+                        <input type="text" id="doc-form-titulo" class="form-control" required placeholder="Ej: Contrato de Adopción Firmado - Luna">
+                    </div>
+
+                    <div class="form-group">
+                        <label>Categoría</label>
+                        <select id="doc-form-categoria" class="form-control">
+                            <option value="formulario">Formulario de Adopción</option>
+                            <option value="legal">Contrato o Documento Legal</option>
+                            <option value="administrativo">Protocolo Clínico / Administrativo</option>
+                            <option value="cotizacion">Cotización / Presupuesto Veterinario</option>
+                            <option value="comprobante">Comprobante de Pago / Boleta</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Enlace Externo (Google Drive / Docs / Nube / PDF) *</label>
+                        <input type="url" id="doc-form-url" class="form-control" required placeholder="https://drive.google.com/file/d/...">
+                        <small class="text-muted">Pega el link del documento editable en Google Drive/Docs o PDF de la Fundación.</small>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Descripción / Observaciones</label>
+                        <textarea id="doc-form-desc" rows="2" class="form-control" placeholder="Notas sobre el contenido, fecha de firma o respaldo..."></textarea>
+                    </div>
+                    <div class="form-row-2">
+                        <div class="form-group">
+                            <label for="doc-form-relation-type">Relacionar con</label>
+                            <select id="doc-form-relation-type" class="form-control">
+                                <option value="general">Gestión general</option>
+                                <option value="animal">Animal</option>
+                                <option value="adopcion">Adopción</option>
+                                <option value="gasto">Gasto</option>
+                            </select>
+                        </div>
+                        <div class="form-group" id="doc-form-relation-record-group" hidden>
+                            <label for="doc-form-relation-id">Registro asociado</label>
+                            <select id="doc-form-relation-id" class="form-control"></select>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary btn-modal-cancel">Cancelar</button>
+                    <button type="submit" id="btn-submit-save-doc" class="btn btn-primary">Guardar Documento</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- MODAL 10: CUESTIONARIO DIGITAL DE ADOPCIÓN (Alternativa B) -->
+    <div id="modal-cuestionario-form" class="modal-overlay">
+        <div class="modal-window modal-xl">
+            <div class="modal-top">
+                <h3>📝 Cuestionario de Evaluación de Postulación a Adopción</h3>
+                <button class="modal-close-btn">&times;</button>
+            </div>
+            <form id="form-cuestionario-adopcion" onsubmit="event.preventDefault(); AdoptionsModule.handleProcessCuestionario();">
+                <div class="modal-body">
+                    <p class="text-muted" style="margin-bottom: 1.25rem;">
+                        Herramienta digital para evaluar la idoneidad del postulante según los criterios de tenencia responsable de la Fundación.
+                    </p>
+
+                    <h4>1. Datos Generales del Postulante</h4>
+                    <div class="form-row-2">
+                        <div class="form-group">
+                            <label>Nombre y Apellidos *</label>
+                            <input type="text" id="quest-nombre" class="form-control" required placeholder="Nombre completo">
+                        </div>
+                        <div class="form-group">
+                            <label>RUT / DNI *</label>
+                            <input type="text" id="quest-rut" class="form-control" required placeholder="12.345.678-9">
+                        </div>
+                    </div>
+
+                    <div class="form-row-2">
+                        <div class="form-group">
+                            <label>Teléfono de Contacto *</label>
+                            <input type="text" id="quest-tel" class="form-control" required placeholder="+56 9 ...">
+                        </div>
+                        <div class="form-group">
+                            <label>Correo Electrónico</label>
+                            <input type="email" id="quest-email" class="form-control" placeholder="correo@ejemplo.com">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Dirección y Comuna de Residencia *</label>
+                        <input type="text" id="quest-dir" class="form-control" required placeholder="Calle, número, depto, comuna">
+                    </div>
+
+                    <h4 style="margin-top: 1.5rem;">2. Entorno y Vivienda</h4>
+                    <div class="form-row-2">
+                        <div class="form-group">
+                            <label>Tipo de Vivienda:</label>
+                            <select id="quest-vivienda" class="form-control">
+                                <option value="casa_patio">Casa con patio cerrado y seguro</option>
+                                <option value="dpto_mallas">Departamento con mallas de seguridad</option>
+                                <option value="dpto_sin_mallas">Departamento sin mallas (compromiso de instalar)</option>
+                                <option value="parcela">Parcela / Sitio abierto</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>¿Es propietario o arrendatario?</label>
+                            <select id="quest-propiedad" class="form-control">
+                                <option value="propio">Propietario</option>
+                                <option value="arriendo_permite">Arrendatario (contrato permite mascotas)</option>
+                                <option value="arriendo_duda">Arrendatario (no consultado)</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <h4 style="margin-top: 1.5rem;">3. Rutina y Cuidado Responsable</h4>
+                    <div class="form-row-2">
+                        <div class="form-group">
+                            <label>¿Cuántas horas al día pasará sola la mascota?</label>
+                            <select id="quest-tiempo" class="form-control">
+                                <option value="0-4">Menos de 4 horas (Siempre hay alguien o teletrabajo)</option>
+                                <option value="4-8">Entre 4 y 8 horas</option>
+                                <option value="8+">Más de 8 horas</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>¿Todos los integrantes del hogar están de acuerdo?</label>
+                            <select id="quest-consenso" class="form-control">
+                                <option value="si">Sí, 100% de acuerdo toda la familia</option>
+                                <option value="casi">Mayoría de acuerdo</option>
+                                <option value="no">Es una sorpresa / no todos enterados</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label>¿Qué ocurrirá con la mascota durante las vacaciones o viajes?</label>
+                        <select id="quest-vacaciones" class="form-control">
+                            <option value="viaja">Viaja con la familia / queda al cuidado de familiar de confianza</option>
+                            <option value="hotel">Hotel canino / cuidador certificado</option>
+                            <option value="indefinido">Aún no planificado</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Compromiso Económico Veterinario (Urgencias, Vacunas anuales, Alimentación)</label>
+                        <select id="quest-solvencia" class="form-control">
+                            <option value="pleno">Cuenta con presupuesto mensual y fondo para emergencias veterinarias</option>
+                            <option value="basico">Solo gastos básicos de alimento</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Mascota por la que postula (Opcional)</label>
+                        <select id="quest-animal-select" class="form-control"></select>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary btn-modal-cancel">Cerrar</button>
+                    <button type="submit" class="btn btn-primary">Evaluar y Guardar Postulación</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- MODAL 11: VISOR DE DOCUMENTO OFICIAL (Imprimible y Editable) -->
+    <div id="modal-view-document" class="modal-overlay">
+        <div class="modal-window modal-xl">
+            <div class="modal-top">
+                <h3 id="view-doc-modal-title">📄 Documento Oficial</h3>
+                <div style="display: flex; gap: 0.5rem; align-items: center; flex-wrap: wrap;">
+                    <button class="btn btn-secondary btn-sm" id="btn-toggle-doc-edit" onclick="DocumentsModule.toggleEditMode()">
+                        ✏️ Editar Texto del Documento
+                    </button>
+                    <button class="btn btn-secondary btn-sm" onclick="DocumentsModule.printCurrentDocument()">
+                        🖨️ Imprimir / Guardar en PDF
+                    </button>
+                    <button class="modal-close-btn">&times;</button>
+                </div>
+            </div>
+            <div id="doc-edit-alert-container" style="padding: 0 1.5rem; display: none;"></div>
+            <div class="modal-body" id="view-doc-modal-body">
+                <!-- Se inyecta la vista previa oficial con formato de hoja membretada -->
+            </div>
+            <div class="modal-footer document-viewer-footer">
+                <div class="document-viewer-note">
+                    <span>🔒 Plantilla institucional local</span>
+                    <span>•</span>
+                    <span>Fundación Amor de Cuatro Patas</span>
+                </div>
+                <div class="document-viewer-actions">
+                    <button type="button" class="btn btn-secondary btn-modal-cancel">Cerrar</button>
+                    <button type="button" class="btn btn-primary" onclick="DocumentsModule.printCurrentDocument()">
+                        🖨️ Imprimir / Guardar en PDF
+                    </button>
+                    <button type="button" class="btn btn-success" onclick="DocumentsModule.acceptDocument()">
+                        ✓ Marcar como revisado
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL 12: CREAR / EDITAR OPERATIVO DE ESTERILIZACIÓN MASIVA -->
+    <div id="modal-proyecto-esterilizacion" class="modal-overlay">
+        <div class="modal-window modal-lg">
+            <div class="modal-top">
+                <h3 id="modal-proyecto-esterilizacion-titulo">Nuevo Operativo de Esterilización Masiva</h3>
+                <button class="modal-close-btn">&times;</button>
+            </div>
+            <form id="form-proyecto-esterilizacion">
+                <input type="hidden" id="proy-est-id">
+                <div class="modal-body">
+                    <div class="form-grid-2">
+                        <div class="form-group full-width">
+                            <label for="proy-est-nombre">Nombre de la Campaña u Operativo *</label>
+                            <input type="text" id="proy-est-nombre" class="form-control" required placeholder="Ej: Operativo Comunitario Las Américas">
+                        </div>
+                        <div class="form-group full-width">
+                            <label for="proy-est-sector">Sede, Lugar o Sector Geográfico *</label>
+                            <input type="text" id="proy-est-sector" class="form-control" required placeholder="Ej: Sede Social Junta de Vecinos N° 14, Sector Norte">
+                        </div>
+                        <div class="form-group">
+                            <label for="proy-est-fecha-inicio">Fecha de Inicio *</label>
+                            <input type="date" id="proy-est-fecha-inicio" class="form-control" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="proy-est-fecha-fin">Fecha de Término</label>
+                            <input type="date" id="proy-est-fecha-fin" class="form-control">
+                        </div>
+                        <div class="form-group">
+                            <label for="proy-est-veterinario">Médico Veterinario Responsable</label>
+                            <input type="text" id="proy-est-veterinario" class="form-control" placeholder="Ej: Dra. Camila Fuentes (Colmevet N° 4512)">
+                        </div>
+                        <div class="form-group">
+                            <label for="proy-est-financiamiento">Entidad Financiamiento / Fondos</label>
+                            <input type="text" id="proy-est-financiamiento" class="form-control" placeholder="Ej: Subdere / Donaciones / Fondos Concursables">
+                        </div>
+                        <div class="form-group">
+                            <label for="proy-est-meta">Meta de Pacientes a Esterilizar</label>
+                            <input type="number" id="proy-est-meta" class="form-control" min="1" value="30">
+                        </div>
+                        <div class="form-group">
+                            <label for="proy-est-estado">Estado del Operativo</label>
+                            <select id="proy-est-estado" class="form-control">
+                                <option value="Planificado">Planificado</option>
+                                <option value="En Ejecución">En Ejecución</option>
+                                <option value="Finalizado">Finalizado</option>
+                            </select>
+                        </div>
+                        <div class="form-group full-width">
+                            <label for="proy-est-drive">Enlace a Carpeta de Respaldos (Google Drive)</label>
+                            <input type="url" id="proy-est-drive" class="form-control" placeholder="https://drive.google.com/drive/folders/...">
+                            <small class="form-hint">Carpeta digital para almacenar consentimientos en papel escaneados y fichas clínicas físicas.</small>
+                        </div>
+                        <div class="form-group full-width">
+                            <label for="proy-est-notas">Notas u Observaciones del Operativo</label>
+                            <textarea id="proy-est-notas" class="form-control" rows="2" placeholder="Detalles de logística, insumos o acuerdos con dirigentes..."></textarea>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary btn-modal-cancel">Cancelar</button>
+                    <button type="submit" class="btn btn-primary">Guardar Operativo</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- MODAL 13: DETALLE DE OPERATIVO, NÓMINA Y MODO TERRENO -->
+    <div id="modal-detalle-operativo" class="modal-overlay">
+        <div class="modal-window modal-xl" style="max-width: 1100px;">
+            <div class="modal-top">
+                <div>
+                    <h3 id="detalle-op-nombre">Nómina del Operativo</h3>
+                    <p style="margin: 0; font-size: 0.85rem; color: var(--color-text-secondary);">
+                        📍 <span id="detalle-op-sector"></span> • 🩺 <span id="detalle-op-veterinario"></span> • 📅 <span id="detalle-op-fechas"></span>
+                    </p>
+                </div>
+                <div style="display: flex; gap: 0.5rem; align-items: center;">
+                    <button type="button" class="btn btn-secondary btn-sm" onclick="EsterilizacionesModule.exportarNominaCSV()">
+                        📥 Exportar Nómina (Excel/CSV)
+                    </button>
+                    <button class="modal-close-btn">&times;</button>
+                </div>
+            </div>
+
+            <div class="modal-body" style="max-height: 75vh; overflow-y: auto;">
+                <!-- FORMULARIO MODO TERRENO (INGRESO RÁPIDO) -->
+                <div style="background: var(--color-surface-hover, #f8fafc); border: 1px solid var(--color-border); border-radius: var(--radius-md); padding: 1.25rem; margin-bottom: 1.5rem;">
+                    <h4 style="margin-bottom: 0.75rem; font-size: 1rem; display: flex; align-items: center; gap: 0.5rem; color: var(--color-text-primary);">
+                        <span>⚡</span> <span>Ingreso Rápido en Terreno (Nuevo Paciente)</span>
+                    </h4>
+                    <form id="form-paciente-esterilizacion">
+                        <input type="hidden" id="pac-est-id">
+                        <div class="form-grid-3" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem;">
+                            <div class="form-group">
+                                <label for="pac-est-especie">Especie *</label>
+                                <select id="pac-est-especie" class="form-control" required>
+                                    <option value="Canino">🐶 Canino</option>
+                                    <option value="Felino">🐱 Felino</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="pac-est-sexo">Sexo *</label>
+                                <select id="pac-est-sexo" class="form-control" required>
+                                    <option value="Hembra">♀️ Hembra</option>
+                                    <option value="Macho">♂️ Macho</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="pac-est-descripcion">Descripción / Rasgos *</label>
+                                <input type="text" id="pac-est-descripcion" class="form-control" required placeholder="Ej: Quiltro café con manchas blancas">
+                            </div>
+                            <div class="form-group">
+                                <label for="pac-est-tutor">Vecino / Cuidador Responsable</label>
+                                <input type="text" id="pac-est-tutor" class="form-control" placeholder="Ej: Juan Pérez (Calle 2) o Comunitario">
+                            </div>
+                            <div class="form-group">
+                                <label for="pac-est-telefono">Teléfono de Contacto</label>
+                                <input type="tel" id="pac-est-telefono" class="form-control" placeholder="+56 9 ...">
+                            </div>
+                            <div class="form-group">
+                                <label for="pac-est-microchip">Microchip (Ley 21.020)</label>
+                                <input type="text" id="pac-est-microchip" class="form-control" placeholder="15 dígitos oficiales" maxlength="15">
+                            </div>
+                            <div class="form-group">
+                                <label for="pac-est-fecha">Fecha de Cirugía</label>
+                                <input type="date" id="pac-est-fecha" class="form-control" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="pac-est-estado-post">Destino Post-Operatorio</label>
+                                <select id="pac-est-estado-post" class="form-control">
+                                    <option value="Retornado a su sector">Retornado a su sector</option>
+                                    <option value="En observación temporal">En observación temporal</option>
+                                    <option value="Derivado a rescate">Derivado a rescate</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="pac-est-observaciones">Observaciones Clínicas</label>
+                                <input type="text" id="pac-est-observaciones" class="form-control" placeholder="Medicamentos, marcaje oreja, preñez...">
+                            </div>
+                        </div>
+                        <div style="margin-top: 1rem; display: flex; justify-content: flex-end; gap: 0.5rem;">
+                            <button type="submit" class="btn btn-primary">
+                                💾 Registrar Paciente en Nómina
+                            </button>
+                        </div>
+                    </form>
+                </div>
+
+                <!-- TABLA DE PACIENTES INTERVENIDOS -->
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.75rem;">
+                    <h4 style="margin: 0; font-size: 1rem; color: var(--color-text-primary);">
+                        📋 Pacientes Registrados en esta Campaña
+                    </h4>
+                    <span id="detalle-op-total-pacientes" class="badge badge-primary" style="font-size: 0.85rem;">
+                        0 pacientes registrados
+                    </span>
+                </div>
+
+                <div class="table-responsive" style="overflow-x: auto;">
+                    <table class="data-table" style="width: 100%;">
+                        <thead>
+                            <tr>
+                                <th>Código</th>
+                                <th>Especie / Sexo</th>
+                                <th>Descripción</th>
+                                <th>Tutor / Cuidador</th>
+                                <th>Microchip</th>
+                                <th>Destino Post</th>
+                                <th style="text-align: right;">Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tabla-pacientes-operativo-body">
+                            <!-- Render dinámico -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary btn-modal-cancel">Cerrar</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts de la Aplicación -->
+    </div>
+    <div id="sidebar-backdrop" class="sidebar-backdrop" aria-hidden="true"></div>
+
+    <script src="js/auth.js"></script>
+    <script src="js/db.js"></script>
+    <script src="js/modules/animals.js"></script>
+    <script src="js/modules/health.js"></script>
+    <script src="js/modules/homes.js"></script>
+    <script src="js/modules/adoptions.js"></script>
+    <script src="js/modules/esterilizaciones.js"></script>
+    <script src="js/modules/expenses.js"></script>
+    <script src="js/modules/documents.js"></script>
+    <script src="js/modules/diffusion.js"></script>
+    <script src="js/modules/reports.js"></script>
+    <script src="js/app.js"></script>
+</body>
+</html>
