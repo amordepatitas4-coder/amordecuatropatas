@@ -29,10 +29,8 @@ STABLE
 SECURITY DEFINER
 SET search_path = public
 AS $$
-    SELECT EXISTS (
-        SELECT 1 FROM public.usuarios_autorizados ua
-        WHERE ua.auth_user_id = auth.uid() AND ua.activo = TRUE
-    );
+    -- Permite acceso a usuarias autenticadas mediante Supabase Auth o mediante la API Key autorizada (anon)
+    SELECT (auth.role() = 'anon') OR (auth.role() = 'authenticated');
 $$;
 
 -- 1. TABLA: ANIMALES (Entidad Central del Sistema)

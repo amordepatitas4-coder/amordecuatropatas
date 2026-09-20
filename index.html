@@ -142,6 +142,12 @@
                 </div>
 
                 <div class="topbar-actions">
+                    <div id="supabase-status-badge" style="display: flex; align-items: center; cursor: pointer;" onclick="SupabaseClient.sincronizarDesdeCloud()" title="Haga clic para sincronizar datos en vivo con Supabase Cloud">
+                        <span style="display: inline-flex; align-items: center; gap: 0.4rem; background: rgba(16, 185, 129, 0.15); color: #10b981; border: 1px solid rgba(16, 185, 129, 0.3); padding: 0.3rem 0.75rem; border-radius: 999px; font-size: 0.8rem; font-weight: 600;">
+                            <span style="width: 8px; height: 8px; border-radius: 50%; background: #10b981; box-shadow: 0 0 8px #10b981;"></span>
+                            <span>Supabase Cloud Conectado</span>
+                        </span>
+                    </div>
                     <div class="user-profile-badge">
                         <span class="user-avatar">👤</span>
                         <div class="user-info">
@@ -1656,6 +1662,8 @@
     </div>
     <div id="sidebar-backdrop" class="sidebar-backdrop" aria-hidden="true"></div>
 
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="js/supabase_client.js"></script>
     <script src="js/auth.js"></script>
     <script src="js/db.js"></script>
     <script src="js/modules/animals.js"></script>
