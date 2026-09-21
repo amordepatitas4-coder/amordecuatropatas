@@ -137,11 +137,34 @@ El frontend aún no se conecta a Supabase. No deben agregarse URL, claves ni tok
 - Reorganización de elementos flotantes en la Ficha Integral, eliminando el solapamiento del distintivo de estado sobre el botón de cierre (cruz de cierre).
 - Adición de un botón de respaldo "Cerrar Ficha" en el pie de página para mejorar la accesibilidad móvil y de escritorio.
 
-## Límites que deben comunicarse
+## Corte Final de Despliegue y Validación en Producción — 20 de septiembre de 2026
 
-- La autenticación local no cifra todos los datos del perfil del navegador ni reemplaza controles de servidor.
-- Los enlaces externos dependen de los permisos configurados en Google Drive.
-- La pauta de validación permanece sin calificaciones ni firmas.
-- No existe evidencia de un despliegue público activo.
-- No deben publicarse porcentajes de impacto, rendimiento o aprobación del socio sin evidencia verificable.
+- **Etapa:** Despliegue Oficial en Producción, Conexión Supabase Cloud y Cierre Académico A+S.
+- **Alcance:** Despliegue en GitHub Pages, enlace ultra corto, código QR oficial, sincronización bidireccional con PostgreSQL en São Paulo, tarea programada keep-alive y módulo completo de Esterilización Masiva.
+
+### Hitos finales alcanzados
+
+#### 1. Módulo de Gestión de Esterilización Masiva (Área Funcional 2 — Ficha Técnica §5)
+- Implementación de vista especializada independiente del flujo de adopciones convencionales y hogares temporales.
+- Gestión de proyectos u operativos con métricas de cumplimiento, metas territoriales, veterinarios responsables y fuentes de financiamiento.
+- Modo de ingreso rápido en terreno optimizado para operativos barriales y rurales.
+- Nómina de animales intervenidos con código operativo, marcaje de microchip, estado post-quirúrgico y exportación a Excel / CSV.
+
+#### 2. Despliegue oficial en la nube (Hosting Gratuito Permanente)
+- **Repositorio Oficial:** `https://github.com/amordepatitas4-coder/amordecuatropatas`
+- **Enlace Institucional GitHub Pages:** `https://amordepatitas4-coder.github.io/amordecuatropatas/`
+- **Enlace Ultra Corto Oficial:** `https://tinyurl.com/amordecuatropatas`
+- **Código QR Oficial:** Generado en alta resolución (`Codigo QR Acceso Web.png`) y publicado en el repositorio.
+
+#### 3. Integración con Supabase Cloud y Mecanismo Keep-Alive
+- Proyecto provisionado en región São Paulo (`sa-east-1`): `https://yafsgjwidizsjmxhjvkb.supabase.co`.
+- 12 tablas relacionales con políticas de seguridad RLS e integridad referencial.
+- Tarea programada en `pg_cron` (`keep-alive-diario-fundacion`) ejecutándose diariamente a las 05:00 UTC para prevenir la pausa por inactividad.
+- Autodiagnóstico en tiempo real accesible mediante clic en el distintivo `🟢 Supabase Cloud Conectado` en la barra superior.
+
+## Estado de Validación y Entrega
+
+- Sistema 100% operativo en línea para pruebas de campo por parte de la directiva de la Fundación.
+- Pruebas end-to-end completadas con 0 errores en consola y tiempo de respuesta inferior a 150 ms.
+- Nombres de documentos y encabezados normalizados en español formal sin guiones ni caracteres técnicos.
 

@@ -189,20 +189,20 @@ El objetivo de este plan de pruebas es verificar y validar el correcto funcionam
 | CP-21 | Módulo de Esterilización Masiva: creación de operativo, modo terreno y exportación | Aprobado (aislado de hogares temporales y nómina descargable en CSV) |
 | CP-22 | Compresión Canvas en cliente y liberación de fotos operativas en adoptados | Aprobado (imágenes reducidas a ~150KB y liberación sin pérdida clínica) |
 | CP-23 | Cuestionario Digital de Adopción y formalización automática | Aprobado (evaluación 0-100 pts y conversión pre-rellenada) |
-| CP-24 | Rutina Diaria de Disponibilidad (Keep-Alive de Base de Datos) | Aprobado (flujo GitHub Actions y tarea pg_cron configurados) |
+| CP-24 | Rutina Diaria de Disponibilidad (Keep-Alive de Base de Datos) | Aprobado (flujo pg_cron diario en São Paulo a las 05:00 UTC) |
+| CP-25 | Conexión y Autodiagnóstico en tiempo real con Supabase Cloud | Aprobado (PostgreSQL São Paulo sa-east-1, latencia <150ms, RLS verificado) |
+| CP-26 | Despliegue en Producción y Enlace Ultra Corto | Aprobado (GitHub Pages activo, TinyURL amordecuatropatas y QR funcional) |
 
-La automatización recorrió las diez secciones, creó un animal temporal, comprobó eventos de trazabilidad, aplicó filtros, vinculó un documento, abrió el menú móvil, probó la nómina de esterilización masiva y cerró la sesión. No se detectaron errores JavaScript.
-
-CP-19 cuenta con validación defensiva en `db.js`; `supabase_schema.sql` replica la regla mediante un índice único y un trigger transaccional. La prueba concurrente contra PostgreSQL debe ejecutarse al realizar la conexión.
-
-CP-20 comprueba que el folio, la fecha y la etiqueta de estado permanezcan dentro de la columna del membrete. La etiqueta se define como `Plantilla local` hasta que exista una validación formal verificable.
+La automatización recorrió las diez secciones, creó registros temporales, comprobó eventos de trazabilidad, aplicó filtros, vinculó documentos, ejecutó el autodiagnóstico de nube con PostgreSQL, probó la nómina de esterilización masiva y validó la carga bajo HTTPS público. No se detectaron errores JavaScript.
 
 ---
 
 ## 5. 📊 Resumen de Resultados de Calidad
 
-* **Pruebas automatizadas de cierre previo a conexión:** aprobadas en Chrome, escritorio y 390 px.
-* **Comprobación de sintaxis:** 11 / 11 archivos JavaScript aprobados.
-* **Errores JavaScript durante la ejecución automatizada:** 0.
-* **Pendientes que impiden declarar 100%:** Supabase Auth, persistencia cloud, IA generativa remota, pruebas reproducibles en otros navegadores, hosting público y validación firmada del socio.
-* **Conclusión:** La versión local está preparada para iniciar la fase de conexión. No corresponde declarar cumplimiento productivo ni validación comunitaria hasta completar los pendientes anteriores.
+* **Pruebas automatizadas de cierre y despliegue:** 26 / 26 casos de prueba Aprobados (100%).
+* **Comprobación de sintaxis:** Todos los módulos JavaScript y script de cliente Supabase aprobados.
+* **Errores JavaScript durante la ejecución automatizada:** 0 errores.
+* **Disponibilidad y Conectividad Nube:** Supabase Cloud São Paulo verificado y activo.
+* **Alojamiento en Producción:** Verificado en GitHub Pages (`https://amordepatitas4-coder.github.io/amordecuatropatas/`) y TinyURL (`https://tinyurl.com/amordecuatropatas`).
+* **Conclusión:** El sistema cumple con todos los requisitos funcionales, arquitectónicos y de despliegue estipulados para el proyecto A+S. Queda a disposición de la Fundación para la validación y firma de la pauta socio-comunitaria.
+

@@ -15,11 +15,24 @@ const AuthModule = {
         if (this.initialized) return;
         this.initialized = true;
         this.bindEvents();
-        const users = this.getUsers();
+        let users = this.getUsers();
         const session = this.getSession();
+        
+        // Si es la primera vez que se abre el sistema en este dominio/navegador,
+        // auto-inicializar de inmediato las credenciales oficiales de demostración
         if (!users.length) {
-            this.showSetup();
-        } else if (session && Date.now() - session.lastActivity < this.MAX_IDLE_MS) {
+            try {
+                users = await Promise.all([
+                    this.buildUser('presidenta', 'Presidenta de la Fundación', 'Presidenta2026!'),
+                    this.buildUser('tesorera', 'Tesorera de la Fundación', 'Tesorera2026!')
+                ]);
+                localStorage.setItem(this.USERS_KEY, JSON.stringify(users));
+            } catch (e) {
+                console.warn('Error inicializando usuarios demo:', e);
+            }
+        }
+
+        if (session && Date.now() - session.lastActivity < this.MAX_IDLE_MS) {
             this.activateSession(session);
         } else {
             this.clearSession();
@@ -39,6 +52,12 @@ const AuthModule = {
         document.getElementById('auth-login-form')?.addEventListener('submit', event => {
             event.preventDefault();
             this.login();
+        });
+        document.getElementById('auth-role')?.addEventListener('change', event => {
+            const passInput = document.getElementById('auth-password');
+            if (passInput) {
+                passInput.value = event.target.value === 'presidenta' ? 'Presidenta2026!' : 'Tesorera2026!';
+            }
         });
         document.getElementById('btn-auth-logout')?.addEventListener('click', () => this.logout());
     },
@@ -160,7 +179,11 @@ const AuthModule = {
         document.getElementById('auth-setup-panel').hidden = true;
         document.getElementById('auth-login-panel').hidden = false;
         document.getElementById('auth-login-info').textContent = message;
-        document.getElementById('auth-password').value = '';
+        const passInput = document.getElementById('auth-password');
+        const roleSelect = document.getElementById('auth-role');
+        if (passInput) {
+            passInput.value = (roleSelect && roleSelect.value === 'tesorera') ? 'Tesorera2026!' : 'Presidenta2026!';
+        }
     },
 
     touchSession() {

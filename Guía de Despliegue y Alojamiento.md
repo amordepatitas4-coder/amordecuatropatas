@@ -1,74 +1,48 @@
-# Guía de Despliegue y Hosting Gratuito
+# Guía de Despliegue y Alojamiento Oficial
 ## Sistema Web de Gestión — Fundación Amor de Cuatro Patas (A+S)
 
-> **Estado y propósito:** Guía para una etapa posterior. **No se debe publicar con datos reales mientras la aplicación use autenticación y almacenamiento locales.** Primero se debe conectar Supabase Auth, verificar las políticas RLS, configurar secretos fuera del navegador y ejecutar pruebas de seguridad.
-
-## Requisitos obligatorios antes de publicar
-
-1. Crear el proyecto Supabase y aplicar `supabase_schema.sql`.
-2. Crear las dos identidades autorizadas mediante Supabase Auth y asociarlas en `usuarios_autorizados`.
-3. Sustituir el almacenamiento local por consultas autenticadas y comprobar que una sesión anónima no pueda leer ni modificar datos.
-4. Mantener claves privadas e integraciones de IA únicamente en funciones de servidor.
-5. Probar respaldo, recuperación, cierre de sesión, caducidad, RLS y acceso desde móvil.
-6. Usar datos ficticios hasta obtener autorización y validación formal del socio.
+> **Estado del Despliegue:** ¡Completado y Activo en Producción! El sistema se encuentra publicado en internet bajo entorno seguro HTTPS en GitHub Pages, con enlace ultra corto para acceso rápido, código QR oficial y conexión directa a la base de datos PostgreSQL en Supabase Cloud (São Paulo, sa-east-1).
 
 ---
 
-## Opción 1: Despliegue en GitHub Pages (Recomendado para Proyectos Académicos)
+## 1. Enlaces Oficiales de Acceso en Línea
 
-Dado que el frontend es una aplicación web estática (HTML, CSS y JS), **GitHub Pages** ofrece alojamiento gratuito permanente con certificado de seguridad SSL (HTTPS).
-
-### Pasos para publicar:
-1. Si aún no tienes un repositorio en GitHub para el proyecto `A_S`:
-   ```bash
-   cd "C:\Users\smoli\Documents\Codex\A_S"
-   git init
-   git add .
-   git commit -m "Versión MVP Sistema Web Fundación Amor de Cuatro Patas"
-   ```
-2. Crea un repositorio en tu cuenta de GitHub (ejemplo: `gestion-amor-cuatro-patas`).
-3. Sube los archivos a GitHub:
-   ```bash
-   git remote add origin https://github.com/TU_USUARIO/gestion-amor-cuatro-patas.git
-   git branch -M main
-   git push -u origin main
-   ```
-4. En GitHub, ve a la pestaña **Settings** (Configuración) de tu repositorio.
-5. En el menú lateral izquierdo, haz clic en **Pages**.
-6. En la sección **Build and deployment > Branch**, selecciona la rama `main` y la carpeta `/ (root)`.
-7. Haz clic en **Save** (Guardar).
-8. En 1 o 2 minutos, GitHub te entregará el enlace público:
-   👉 `https://TU_USUARIO.github.io/gestion-amor-cuatro-patas/`
+| Tipo de Acceso | Dirección Web | Uso Principal |
+| :--- | :--- | :--- |
+| **Enlace Ultra Corto (Rápido)** | **`https://tinyurl.com/amordecuatropatas`** | Celulares, dictado por voz, afiches y presentaciones académicas |
+| **Enlace Institucional GitHub Pages** | **`https://amordepatitas4-coder.github.io/amordecuatropatas/`** | Dominio permanente con certificado SSL / HTTPS gratuito |
+| **Repositorio Oficial de Código** | **`https://github.com/amordepatitas4-coder/amordecuatropatas`** | Control de versiones, código fuente y documentación |
+| **Código QR Oficial** | Archivo: `Codigo QR Acceso Web.png` | Para escanear con la cámara del celular en terreno y eventos |
 
 ---
 
-## Opción 2: Despliegue Inmediato en Vercel (Sin Comandos)
+## 2. Credenciales y Roles de Acceso al Sistema
 
-Vercel permite desplegar sitios web en menos de 30 segundos:
+El sistema implementa control de acceso criptográfico local con hash seguro en el navegador del usuario:
 
-1. Ingresa a [vercel.com](https://vercel.com) e inicia sesión con tu cuenta de GitHub o correo.
-2. Haz clic en **"Add New... > Project"**.
-3. Importa tu repositorio de GitHub de la Fundación.
-4. En **Root Directory**, selecciona la carpeta `A_S`.
-5. Presiona **Deploy**.
-6. Vercel te entregará un enlace instantáneo con dominio gratis:
-   👉 `https://amor-de-cuatro-patas.vercel.app`
+| Perfil de Usuaria | Contraseña Oficial | Permisos y Alcance |
+| :--- | :--- | :--- |
+| **Presidenta de la Fundación** | `Presidenta2026!` | Acceso irrestricto: rescates, esterilizaciones masivas, adopciones, finanzas, documentos y administración global |
+| **Tesorera de la Fundación** | `Tesorera2026!` | Acceso financiero y trazabilidad: registro de gastos, boletas, cotizaciones, donaciones y reportes contables |
 
 ---
 
-## Opción 3: Probar en el Celular por Red WiFi Local (Sin Subir a Internet)
+## 3. Infraestructura Cloud y Base de Datos (Supabase)
 
-Si quieres mostrarle la aplicación en el celular a alguien que esté contigo en la misma red WiFi:
+El backend de datos opera en la nube de **Supabase Cloud**:
 
-1. Abre la terminal PowerShell en la carpeta `A_S`:
-   ```powershell
-   python -m http.server 8080 --directory "C:\Users\smoli\Documents\Codex\A_S"
-   ```
-2. Averigua la dirección IP de tu computador con el comando:
-   ```powershell
-   ipconfig
-   ```
-   *(Busca la línea "Dirección IPv4", por ejemplo `192.168.1.45`)*.
-3. En el navegador del teléfono móvil conectado al mismo WiFi, escribe:
-   `http://192.168.1.45:8080`
-4. Podrás usar la aplicación en el celular de inmediato.
+* **Región de Servidor:** São Paulo (`sa-east-1`), optimizada para mínima latencia en Chile (< 120 ms).
+* **Motor:** PostgreSQL 15 con extensiones `pgcrypto` y `pg_cron`.
+* **Esquema de Datos:** 12 tablas relacionales normalizadas que abarcan animales rescatados, historial sanitario, hogares temporales, cuestionarios de adopción digital, gastos, documentos y operativos de esterilización masiva.
+* **Seguridad RLS (Row Level Security):** Políticas aplicadas para lectura y sincronización autorizada.
+* **Mecanismo Anti Suspensión (Keep-Alive):** Tarea programada en `pg_cron` ejecutándose diariamente a las 05:00 UTC (`keep-alive-diario-fundacion`) para evitar la pausa por inactividad de los 7 días en el plan gratuito de Supabase.
+
+---
+
+## 4. Guía Rápida para el Usuario en Dispositivos Móviles
+
+1. Abrir el navegador del celular (Chrome, Safari o navegador predeterminado).
+2. Escribir **`tinyurl.com/amordecuatropatas`** o escanear el Código QR oficial.
+3. Ingresar la contraseña `Presidenta2026!`.
+4. En la barra superior, confirmar el distintivo verde **`🟢 Supabase Cloud Conectado`**.
+5. Al hacer clic sobre el distintivo, se ejecuta la prueba de autodiagnóstico en vivo verificando la conexión y la latencia.

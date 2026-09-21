@@ -22,13 +22,13 @@
 ---
 
 ## 1. ¿Cómo ingresar al sistema?
-1. Abre tu navegador de internet favorito (Google Chrome, Microsoft Edge, Safari o Firefox).
-2. Abre el archivo `index.html` del sistema en tu computador o ingresa al enlace web del proyecto.
-3. En el primer uso aparecerá **Configuración inicial**. Crea una contraseña para la Presidenta y otra diferente para la Tesorera. Cada contraseña debe tener al menos 10 caracteres.
-4. Después selecciona tu cargo, escribe tu contraseña y presiona **Ingresar**.
-5. En la parte superior derecha verás la cuenta activa. Ambas cuentas tienen acceso completo, pero para cambiar de usuaria es obligatorio cerrar sesión e ingresar con la otra contraseña.
-
-> **Importante:** Las contraseñas no pueden recuperarse desde la pantalla. Antes de ingresar datos reales, la Fundación debe conservarlas en un administrador de contraseñas. Esta protección corresponde a la etapa local; la conexión futura utilizará Supabase Auth.
+1. Puedes ingresar directamente desde tu teléfono móvil o computador mediante el enlace ultra corto oficial:
+   👉 **[tinyurl.com/amordecuatropatas](https://tinyurl.com/amordecuatropatas)**
+   *(O mediante el enlace institucional: `https://amordepatitas4-coder.github.io/amordecuatropatas/` o escaneando el Código QR oficial).*
+2. En la pantalla de bienvenida, selecciona tu cargo (**Presidenta** o **Tesorera**).
+3. Escribe tu contraseña oficial (ejemplo inicial de prueba: `Presidenta2026!` o `Tesorera2026!`) y presiona **Ingresar**.
+4. En la parte superior derecha verás el distintivo verde **`🟢 Supabase Cloud Conectado`**, confirmando la sincronización en vivo con la base de datos central en la nube.
+5. Para cambiar de usuaria o retirarte del dispositivo, haz clic en el botón de salida (↪) junto a tu nombre para cerrar sesión de manera segura.
 
 ---
 
