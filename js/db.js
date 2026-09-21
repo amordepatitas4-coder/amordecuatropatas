@@ -558,6 +558,81 @@ class DatabaseManager {
     }
 
     /**
+     * Limpia la base de datos para uso productivo real de la Fundación.
+     * Vacia animales, gastos, hogares y operativos ficticios.
+     * Conserva intactas las plantillas oficiales (Contratos, Protocolos de Triage).
+     */
+    async limpiarParaProduccionReal() {
+        const documentosOficiales = (this.db.documentos && this.db.documentos.length) 
+            ? this.db.documentos.filter(d => ['doc-001', 'doc-002', 'doc-003'].includes(d.id))
+            : JSON.parse(JSON.stringify(INITIAL_DATABASE_STATE.documentos));
+
+        this.db = {
+            animales: [],
+            historial_estados: [],
+            historial_sanitario: [],
+            hogares_temporales: [],
+            animal_hogares: [],
+            cuestionarios_adopcion: [],
+            adoptantes: [],
+            adopciones: [],
+            seguimientos: [],
+            gastos: [],
+            gasto_animales: [],
+            proyectos_esterilizacion: [],
+            animales_esterilizacion: [],
+            documentos: documentosOficiales
+        };
+        this.save();
+
+        // Si Supabase Cloud está disponible, limpiar datos de prueba en la nube
+        if (window.SupabaseClient && window.SupabaseClient.client) {
+            try {
+                const client = window.SupabaseClient.client;
+                await Promise.all([
+                    client.from('animales_esterilizacion').delete().neq('id', 'safe_keep_blank'),
+                    client.from('proyectos_esterilizacion').delete().neq('id', 'safe_keep_blank'),
+                    client.from('cuestionarios_adopcion').delete().neq('id', 'safe_keep_blank'),
+                    client.from('seguimientos').delete().neq('id', 'safe_keep_blank'),
+                    client.from('adopciones').delete().neq('id', 'safe_keep_blank'),
+                    client.from('adoptantes').delete().neq('id', 'safe_keep_blank'),
+                    client.from('gasto_animales').delete().neq('gasto_id', 'safe_keep_blank'),
+                    client.from('gastos').delete().neq('id', 'safe_keep_blank'),
+                    client.from('historial_sanitario').delete().neq('id', 'safe_keep_blank'),
+                    client.from('historial_estados').delete().neq('id', 'safe_keep_blank'),
+                    client.from('animal_hogares').delete().neq('id', 'safe_keep_blank'),
+                    client.from('hogares_temporales').delete().neq('id', 'safe_keep_blank'),
+                    client.from('animales').delete().neq('id', 'safe_keep_blank')
+                ]);
+                console.log('🧹 [Supabase Cloud] Base de datos en la nube limpiada para producción real.');
+            } catch (e) {
+                console.warn('[Supabase Cloud] Advertencia limpiando nube:', e);
+            }
+        }
+        return this.db;
+    }
+
+    /**
+     * Carga el set de datos de demostración para presentaciones académicas
+     */
+    async cargarDatosDemostracion() {
+        this.db = JSON.parse(JSON.stringify(INITIAL_DATABASE_STATE));
+        this.save();
+        if (window.SupabaseClient && typeof window.SupabaseClient.upsert === 'function') {
+            for (const a of this.db.animales) {
+                await window.SupabaseClient.upsert('animales', a);
+            }
+            for (const p of this.db.proyectos_esterilizacion) {
+                await window.SupabaseClient.upsert('proyectos_esterilizacion', p);
+            }
+            for (const ae of this.db.animales_esterilizacion) {
+                await window.SupabaseClient.upsert('animales_esterilizacion', ae);
+            }
+        }
+        return this.db;
+    }
+
+    /**
      * Genera un identificador único con prefijo
      */
     generateId(prefix = 'item') {

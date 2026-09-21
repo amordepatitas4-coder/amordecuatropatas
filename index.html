@@ -121,6 +121,12 @@
             </nav>
 
             <div class="sidebar-footer">
+                <button class="btn btn-sm full-width" onclick="App.clearForProduction()" style="margin-bottom: 0.5rem; background: #059669; color: #ffffff; border: 1px solid #10b981; font-weight: 600;" title="Deja la base de datos limpia en blanco para que la Fundación registre sus rescates reales">
+                    🧹 Limpiar para Uso Real
+                </button>
+                <button class="btn btn-secondary btn-sm full-width" onclick="App.loadDemoData()" style="margin-bottom: 0.5rem;" title="Carga animales y gastos ficticios para exposiciones académicas">
+                    🎲 Cargar Datos Demo
+                </button>
                 <button class="btn btn-secondary btn-sm full-width" onclick="App.exportBackup()" style="margin-bottom: 0.5rem;">
                     💾 Exportar Respaldo JSON
                 </button>
@@ -128,9 +134,6 @@
                     📥 Importar Respaldo JSON
                 </button>
                 <input type="file" id="import-backup-input" accept=".json" style="display:none;" onchange="App.handleImportBackup(event)">
-                <button class="btn btn-outline-danger btn-sm" onclick="App.resetDemoData()">
-                    🔄 Reiniciar Datos Demo
-                </button>
             </div>
         </aside>
 

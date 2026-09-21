@@ -193,14 +193,42 @@ const App = {
     },
 
     /**
-     * Restablece los datos de demostración
+     * Limpia el sistema para uso productivo real de la Fundación (0 registros ficticios)
      */
-    resetDemoData() {
+    async clearForProduction() {
         if (!window.AuthModule.requireSession()) return;
-        if (confirm('¿Deseas restaurar los datos semilla iniciales de la Fundación? Esta acción reiniciará los registros.')) {
-            window.DB.resetToSeed();
-            location.reload();
+        const confirmacion = confirm(
+            "⚠️ ¿ACTIVAR MODO PRODUCCIÓN REAL DE LA FUNDACIÓN?\n\n" +
+            "Esta acción vaciará todos los animales, gastos, hogares y operativos de prueba para dejar el sistema 100% limpio en blanco para la Presidenta y Tesorera.\n\n" +
+            "Se conservarán intactos los Contratos Oficiales de la Ley 21.020, Protocolos de Triage y Cuestionarios.\n\n" +
+            "¿Deseas activar el sistema limpio para uso real de la Fundación?"
+        );
+        if (confirmacion) {
+            await window.DB.limpiarParaProduccionReal();
+            this.showNotification("✨ ¡Sistema limpio para uso real! (0 registros de prueba).", "success");
+            setTimeout(() => location.reload(), 1200);
         }
+    },
+
+    /**
+     * Carga el set de datos de prueba para exposiciones o defensas académicas
+     */
+    async loadDemoData() {
+        if (!window.AuthModule.requireSession()) return;
+        const confirmacion = confirm(
+            "🎲 ¿CARGAR DATOS DE DEMOSTRACIÓN ACADÉMICA?\n\n" +
+            "Esta acción cargará los datos de ejemplo (Luna, Rocky, operativos y gastos simulados) para presentaciones en clases o defensas ante la comisión evaluadora.\n\n" +
+            "¿Deseas cargar los datos de demostración?"
+        );
+        if (confirmacion) {
+            await window.DB.cargarDatosDemostracion();
+            this.showNotification("📊 Datos de demostración cargados con éxito.", "success");
+            setTimeout(() => location.reload(), 1200);
+        }
+    },
+
+    resetDemoData() {
+        this.loadDemoData();
     },
 
     exportBackup() {
