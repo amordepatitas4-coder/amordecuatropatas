@@ -15,38 +15,38 @@ El sistema se encuentra desplegado y disponible públicamente en:
 
 ---
 
-## ✨ Características Principales
+## Características Principales
 
-1. **🐾 Portal Ciudadano de Adopción:**
+1. **Portal Ciudadano de Adopción:**
    - Catálogo interactivo con filtros por especie (Caninos y Felinos).
    - Formulario digital de postulación basado en los estándares de la **Ley 21.020 de Tenencia Responsable**.
    - Evaluación y puntaje automático de aptitud del postulante.
 
-2. **📋 Fichas Integrales de Animales:**
+2. **Fichas Integrales de Animales:**
    - Registro de datos biométricos, fotografías, estado operativo, personalidad y descripción.
    - Pestañas completas de historial sanitario, hogares temporales, gastos y postulaciones asociadas.
 
-3. **🩺 Historial Sanitario y Tratamientos:**
+3. **Historial Sanitario y Tratamientos:**
    - Control de vacunas (óctuple, antirrábica, triple felina), desparasitaciones, cirugías y tratamientos clínicos.
 
-4. **✂️ Operativos de Esterilización Masiva:**
+4. **Operativos de Esterilización Masiva:**
    - Planificación de campañas en terreno para animales comunitarios y en situación de calle.
    - Registro de pacientes, control de microchips y distribución por especie.
 
-5. **🏡 Hogares Temporales y Familias de Paso:**
+5. **Hogares Temporales y Familias de Paso:**
    - Base de datos de hogares de acogida con capacidad y asignación activa de rescatados.
 
-6. **🤝 Formalización de Adopciones y Seguimiento:**
+6. **Formalización de Adopciones y Seguimiento:**
    - Generación de contratos oficiales con número de folio único.
    - Bitácora de seguimiento post-adopción con botón directo de contacto por **WhatsApp**.
 
-7. **💰 Gestión Financiera y Finanzas Claras:**
+7. **Gestión Financiera y Finanzas Claras:**
    - Registro clasificado de ingresos, donaciones y egresos por rescate o general.
 
-8. **🎨 Difusión y Asistente de Flyers:**
+8. **Difusión y Asistente de Flyers:**
    - Generador automático de afiches en HTML5 Canvas listos para descargar y compartir en redes sociales.
 
-9. **☁️ Sincronización en la Nube (Supabase Cloud):**
+9. **Sincronización en la Nube (Supabase Cloud):**
    - Base de datos relacional PostgreSQL alojada en región São Paulo con redundancia local offline.
 
 ---
