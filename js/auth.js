@@ -60,6 +60,10 @@ const AuthModule = {
             }
         });
         document.getElementById('btn-auth-logout')?.addEventListener('click', () => this.logout());
+        document.getElementById('form-cambiar-password')?.addEventListener('submit', event => {
+            event.preventDefault();
+            this.cambiarPassword(event);
+        });
     },
 
     getUsers() {
@@ -109,8 +113,8 @@ const AuthModule = {
         const treasurerConfirm = document.getElementById('setup-treasurer-confirm').value;
         const error = document.getElementById('auth-setup-error');
         error.textContent = '';
-        if (president.length < 10 || treasurer.length < 10) {
-            error.textContent = 'Cada contraseña debe tener al menos 10 caracteres.';
+        if (president.length < 8 || treasurer.length < 8) {
+            error.textContent = 'Cada contraseña debe tener al menos 8 caracteres.';
             return;
         }
         if (president !== presidentConfirm || treasurer !== treasurerConfirm) {
@@ -127,7 +131,7 @@ const AuthModule = {
         ]);
         localStorage.setItem(this.USERS_KEY, JSON.stringify(users));
         document.getElementById('auth-setup-form').reset();
-        this.showLogin('Configuración terminada. Inicia sesión con una de las cuentas.');
+        this.showLogin('¡Contraseñas configuradas con éxito! Ahora puedes iniciar sesión.');
     },
 
     async login() {
@@ -202,6 +206,104 @@ const AuthModule = {
 
     clearSession() {
         sessionStorage.removeItem(this.SESSION_KEY);
+    },
+
+    abrirModalCambiarPassword() {
+        const session = this.requireSession();
+        if (!session) return;
+        const modal = document.getElementById('modal-cambiar-password');
+        if (!modal) return;
+        const selectUser = document.getElementById('chg-pass-usuario');
+        if (selectUser) {
+            selectUser.value = session.userId || 'presidenta';
+        }
+        const actInput = document.getElementById('chg-pass-actual');
+        const nueInput = document.getElementById('chg-pass-nueva');
+        const confInput = document.getElementById('chg-pass-confirmar');
+        if (actInput) actInput.value = '';
+        if (nueInput) nueInput.value = '';
+        if (confInput) confInput.value = '';
+
+        const errorEl = document.getElementById('chg-pass-error');
+        const successEl = document.getElementById('chg-pass-success');
+        if (errorEl) { errorEl.style.display = 'none'; errorEl.textContent = ''; }
+        if (successEl) { successEl.style.display = 'none'; successEl.textContent = ''; }
+
+        modal.classList.add('active');
+    },
+
+    async cambiarPassword(event) {
+        if (event) event.preventDefault();
+        const role = document.getElementById('chg-pass-usuario')?.value;
+        const actual = document.getElementById('chg-pass-actual')?.value;
+        const nueva = document.getElementById('chg-pass-nueva')?.value;
+        const confirmar = document.getElementById('chg-pass-confirmar')?.value;
+        const errorEl = document.getElementById('chg-pass-error');
+        const successEl = document.getElementById('chg-pass-success');
+
+        const showError = (msg) => {
+            if (errorEl) {
+                errorEl.textContent = msg;
+                errorEl.style.display = 'block';
+            }
+            if (successEl) successEl.style.display = 'none';
+        };
+
+        if (!actual) {
+            showError('Debes ingresar la contraseña actual de la cuenta.');
+            return;
+        }
+        if (!nueva || nueva.length < 8) {
+            showError('La nueva contraseña debe tener al menos 8 caracteres.');
+            return;
+        }
+        if (nueva !== confirmar) {
+            showError('Las confirmaciones de la nueva contraseña no coinciden.');
+            return;
+        }
+
+        const users = this.getUsers();
+        const userIndex = users.findIndex(u => u.id === role);
+        if (userIndex === -1) {
+            showError('La cuenta seleccionada no existe en el sistema.');
+            return;
+        }
+
+        const user = users[userIndex];
+        const verifierActual = await this.deriveVerifier(actual, this.base64ToBytes(user.salt));
+        if (verifierActual !== user.verifier) {
+            showError('La contraseña actual es incorrecta.');
+            const actField = document.getElementById('chg-pass-actual');
+            if (actField) actField.value = '';
+            return;
+        }
+
+        // Generar nueva sal criptográfica y derivar el nuevo verificador PBKDF2
+        const newSalt = crypto.getRandomValues(new Uint8Array(16));
+        const newVerifier = await this.deriveVerifier(nueva, newSalt);
+
+        users[userIndex] = {
+            ...user,
+            salt: this.bytesToBase64(newSalt),
+            verifier: newVerifier,
+            updatedAt: new Date().toISOString()
+        };
+
+        localStorage.setItem(this.USERS_KEY, JSON.stringify(users));
+
+        if (errorEl) errorEl.style.display = 'none';
+        if (successEl) {
+            successEl.textContent = '✨ ¡Contraseña actualizada exitosamente!';
+            successEl.style.display = 'block';
+        }
+
+        if (window.App && typeof window.App.showNotification === 'function') {
+            window.App.showNotification('✨ Contraseña actualizada exitosamente.');
+        }
+
+        setTimeout(() => {
+            document.getElementById('modal-cambiar-password')?.classList.remove('active');
+        }, 1200);
     },
 
     logout(message = 'Sesión cerrada correctamente.') {

@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="Sistema Web de Gestión — Fundación Amor de Cuatro Patas (Proyecto A+S)">
     <title>Fundación Amor de Cuatro Patas | Sistema Web de Gestión</title>
-    <link rel="stylesheet" href="index.css?v=4.0">
+    <link rel="stylesheet" href="index.css?v=4.1">
 </head>
 <body>
     <section id="auth-gate" class="auth-gate" aria-labelledby="auth-title">
@@ -15,27 +15,30 @@
             <p class="auth-intro">Información interna de la Fundación Amor de Cuatro Patas</p>
 
             <div id="auth-setup-panel" hidden>
-                <h2>Configuración inicial</h2>
-                <p>Crea una contraseña distinta para cada usuaria autorizada. Se solicitará una sola vez en este dispositivo.</p>
+                <h2>Configuración o Cambio de Contraseñas</h2>
+                <p>Define una contraseña de al menos 8 caracteres para cada usuaria autorizada de la Fundación.</p>
                 <form id="auth-setup-form">
                     <div class="form-group">
-                        <label for="setup-president-password">Contraseña de la Presidenta</label>
-                        <input id="setup-president-password" class="form-control" type="password" minlength="10" autocomplete="new-password" required>
+                        <label for="setup-president-password">Nueva Contraseña de la Presidenta</label>
+                        <input id="setup-president-password" class="form-control" type="password" minlength="8" autocomplete="new-password" placeholder="Mínimo 8 caracteres" required>
                     </div>
                     <div class="form-group">
-                        <label for="setup-president-confirm">Confirmar contraseña de la Presidenta</label>
-                        <input id="setup-president-confirm" class="form-control" type="password" minlength="10" autocomplete="new-password" required>
+                        <label for="setup-president-confirm">Confirmar Contraseña de la Presidenta</label>
+                        <input id="setup-president-confirm" class="form-control" type="password" minlength="8" autocomplete="new-password" placeholder="Repite la contraseña" required>
                     </div>
                     <div class="form-group">
-                        <label for="setup-treasurer-password">Contraseña de la Tesorera</label>
-                        <input id="setup-treasurer-password" class="form-control" type="password" minlength="10" autocomplete="new-password" required>
+                        <label for="setup-treasurer-password">Nueva Contraseña de la Tesorera</label>
+                        <input id="setup-treasurer-password" class="form-control" type="password" minlength="8" autocomplete="new-password" placeholder="Mínimo 8 caracteres" required>
                     </div>
                     <div class="form-group">
-                        <label for="setup-treasurer-confirm">Confirmar contraseña de la Tesorera</label>
-                        <input id="setup-treasurer-confirm" class="form-control" type="password" minlength="10" autocomplete="new-password" required>
+                        <label for="setup-treasurer-confirm">Confirmar Contraseña de la Tesorera</label>
+                        <input id="setup-treasurer-confirm" class="form-control" type="password" minlength="8" autocomplete="new-password" placeholder="Repite la contraseña" required>
                     </div>
                     <p id="auth-setup-error" class="auth-error" role="alert"></p>
-                    <button class="btn btn-primary full-width" type="submit">Crear accesos protegidos</button>
+                    <button class="btn btn-primary full-width" type="submit">💾 Guardar y Actualizar Accesos</button>
+                    <button type="button" class="btn btn-secondary full-width" style="margin-top: 0.5rem;" onclick="AuthModule.showLogin()">
+                        ⬅ Volver al Inicio de Sesión
+                    </button>
                 </form>
             </div>
 
@@ -56,9 +59,11 @@
                     </div>
                     <p id="auth-login-error" class="auth-error" role="alert"></p>
                     <button class="btn btn-primary full-width" type="submit">Ingresar</button>
-                    <p class="auth-security-note" style="margin-top: 0.85rem; color: #a5b4fc; font-weight: 500;">
-                        💡 Acceso oficial listo: presione <strong>Ingresar</strong> para acceder al sistema.
-                    </p>
+                    <div style="margin-top: 0.75rem; border-top: 1px solid var(--border-color); padding-top: 0.75rem; text-align: center;">
+                        <button type="button" class="btn btn-secondary btn-sm full-width" onclick="AuthModule.showSetup()" title="Restablecer o actualizar las contraseñas">
+                            🔑 Restablecer / Cambiar Contraseñas
+                        </button>
+                    </div>
                 </form>
             </div>
             <p class="auth-security-note">Sesión protegida con cierre automático tras 30 minutos de inactividad.</p>
@@ -130,6 +135,9 @@
                 <button class="btn btn-secondary btn-sm full-width" onclick="App.loadDemoData()" style="margin-bottom: 0.5rem;" title="Carga animales y gastos ficticios para exposiciones académicas">
                     🎲 Cargar Datos Demo
                 </button>
+                <button class="btn btn-secondary btn-sm full-width" onclick="AuthModule.abrirModalCambiarPassword()" style="margin-bottom: 0.5rem;" title="Cambiar la contraseña de acceso de la cuenta">
+                    🔑 Cambiar Contraseña
+                </button>
                 <button class="btn btn-secondary btn-sm full-width" onclick="App.exportBackup()" style="margin-bottom: 0.5rem;">
                     💾 Exportar Respaldo JSON
                 </button>
@@ -163,6 +171,9 @@
                             <strong id="user-active-name">Presidenta de la Fundación</strong>
                             <small class="text-muted">Permiso Total</small>
                         </div>
+                        <button id="btn-change-password" class="btn-icon-switch" title="Cambiar Contraseña" aria-label="Cambiar Contraseña" onclick="AuthModule.abrirModalCambiarPassword()">
+                            🔑
+                        </button>
                         <button id="btn-auth-logout" class="btn-icon-switch" title="Cerrar sesión" aria-label="Cerrar sesión">
                             ↪
                         </button>
@@ -1667,23 +1678,72 @@
         </div>
     </div>
 
+    <!-- MODAL 14: CAMBIAR CONTRASEÑA DE ACCESO -->
+    <div id="modal-cambiar-password" class="modal-overlay">
+        <div class="modal-window" style="max-width: 480px;">
+            <div class="modal-top">
+                <h3>🔑 Cambiar Contraseña de Acceso</h3>
+                <button class="modal-close-btn">&times;</button>
+            </div>
+            <form id="form-cambiar-password">
+                <div class="modal-body">
+                    <p style="color: var(--text-secondary); font-size: 0.9rem; margin-bottom: 1.25rem;">
+                        Actualiza la clave de seguridad para la cuenta seleccionada. La nueva contraseña se cifrará con algoritmo PBKDF2 y sal criptográfica local.
+                    </p>
+                    
+                    <div class="form-group">
+                        <label for="chg-pass-usuario">Cuenta a Modificar</label>
+                        <select id="chg-pass-usuario" class="form-control" required>
+                            <option value="presidenta">Presidenta de la Fundación</option>
+                            <option value="tesorera">Tesorera de la Fundación</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="chg-pass-actual">Contraseña Actual</label>
+                        <input type="password" id="chg-pass-actual" class="form-control" placeholder="Ingresa tu contraseña actual" required autocomplete="current-password">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="chg-pass-nueva">Nueva Contraseña</label>
+                        <input type="password" id="chg-pass-nueva" class="form-control" placeholder="Mínimo 8 caracteres" minlength="8" required autocomplete="new-password">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="chg-pass-confirmar">Confirmar Nueva Contraseña</label>
+                        <input type="password" id="chg-pass-confirmar" class="form-control" placeholder="Repite la nueva contraseña" minlength="8" required autocomplete="new-password">
+                    </div>
+
+                    <div id="chg-pass-error" class="auth-error" style="display: none; color: #ef4444; font-size: 0.85rem; margin-top: 0.5rem;" role="alert"></div>
+                    <div id="chg-pass-success" style="display: none; color: #10b981; font-size: 0.85rem; margin-top: 0.5rem; font-weight: 600;" role="status"></div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary btn-modal-cancel">Cancelar</button>
+                    <button type="submit" class="btn btn-primary" id="btn-guardar-nueva-clave">
+                        💾 Guardar Nueva Contraseña
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
     <!-- Scripts de la Aplicación -->
     </div>
     <div id="sidebar-backdrop" class="sidebar-backdrop" aria-hidden="true"></div>
 
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    <script src="js/supabase_client.js?v=4.0"></script>
-    <script src="js/auth.js?v=4.0"></script>
-    <script src="js/db.js?v=4.0"></script>
-    <script src="js/modules/animals.js?v=4.0"></script>
-    <script src="js/modules/health.js?v=4.0"></script>
-    <script src="js/modules/homes.js?v=4.0"></script>
-    <script src="js/modules/adoptions.js?v=4.0"></script>
-    <script src="js/modules/esterilizaciones.js?v=4.0"></script>
-    <script src="js/modules/expenses.js?v=4.0"></script>
-    <script src="js/modules/documents.js?v=4.0"></script>
-    <script src="js/modules/diffusion.js?v=4.0"></script>
-    <script src="js/modules/reports.js?v=4.0"></script>
-    <script src="js/app.js?v=4.0"></script>
+    <script src="js/supabase_client.js?v=4.1"></script>
+    <script src="js/auth.js?v=4.1"></script>
+    <script src="js/db.js?v=4.1"></script>
+    <script src="js/modules/animals.js?v=4.1"></script>
+    <script src="js/modules/health.js?v=4.1"></script>
+    <script src="js/modules/homes.js?v=4.1"></script>
+    <script src="js/modules/adoptions.js?v=4.1"></script>
+    <script src="js/modules/esterilizaciones.js?v=4.1"></script>
+    <script src="js/modules/expenses.js?v=4.1"></script>
+    <script src="js/modules/documents.js?v=4.1"></script>
+    <script src="js/modules/diffusion.js?v=4.1"></script>
+    <script src="js/modules/reports.js?v=4.1"></script>
+    <script src="js/app.js?v=4.1"></script>
 </body>
 </html>
