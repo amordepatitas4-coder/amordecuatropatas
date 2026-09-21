@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="Sistema Web de Gestión — Fundación Amor de Cuatro Patas (Proyecto A+S)">
     <title>Fundación Amor de Cuatro Patas | Sistema Web de Gestión</title>
-    <link rel="stylesheet" href="index.css?v=3.5">
+    <link rel="stylesheet" href="index.css?v=4.0">
 </head>
 <body>
     <section id="auth-gate" class="auth-gate" aria-labelledby="auth-title">
@@ -75,6 +75,9 @@
                     <h2>Amor de Cuatro Patas</h2>
                     <span class="brand-tag">Gestión A+S • MVP</span>
                 </div>
+                <button id="sidebar-collapse-btn" class="sidebar-collapse-btn" type="button" title="Ocultar panel lateral (Tomar toda la pantalla)" aria-label="Ocultar menú">
+                    ◀
+                </button>
             </div>
 
             <nav class="sidebar-menu">
@@ -142,7 +145,7 @@
             <!-- HEADER SUPERIOR -->
             <header class="app-topbar">
                 <div class="topbar-title">
-                    <button id="mobile-menu-toggle" class="mobile-menu-toggle" type="button" aria-label="Abrir menú" aria-controls="app-sidebar" aria-expanded="false">☰</button>
+                    <button id="mobile-menu-toggle" class="mobile-menu-toggle" type="button" aria-label="Alternar menú lateral" aria-controls="app-sidebar" aria-expanded="true" title="Alternar panel lateral (Tomar toda la pantalla)">☰</button>
                     <span class="badge-role">Acceso Autorizado</span>
                     <h1 id="topbar-page-title">Sistema de Gestión y Trazabilidad</h1>
                 </div>
@@ -1669,18 +1672,18 @@
     <div id="sidebar-backdrop" class="sidebar-backdrop" aria-hidden="true"></div>
 
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    <script src="js/supabase_client.js?v=3.5"></script>
-    <script src="js/auth.js?v=3.5"></script>
-    <script src="js/db.js?v=3.5"></script>
-    <script src="js/modules/animals.js?v=3.5"></script>
-    <script src="js/modules/health.js?v=3.5"></script>
-    <script src="js/modules/homes.js?v=3.5"></script>
-    <script src="js/modules/adoptions.js?v=3.5"></script>
-    <script src="js/modules/esterilizaciones.js?v=3.5"></script>
-    <script src="js/modules/expenses.js?v=3.5"></script>
-    <script src="js/modules/documents.js?v=3.5"></script>
-    <script src="js/modules/diffusion.js?v=3.5"></script>
-    <script src="js/modules/reports.js?v=3.5"></script>
-    <script src="js/app.js?v=3.5"></script>
+    <script src="js/supabase_client.js?v=4.0"></script>
+    <script src="js/auth.js?v=4.0"></script>
+    <script src="js/db.js?v=4.0"></script>
+    <script src="js/modules/animals.js?v=4.0"></script>
+    <script src="js/modules/health.js?v=4.0"></script>
+    <script src="js/modules/homes.js?v=4.0"></script>
+    <script src="js/modules/adoptions.js?v=4.0"></script>
+    <script src="js/modules/esterilizaciones.js?v=4.0"></script>
+    <script src="js/modules/expenses.js?v=4.0"></script>
+    <script src="js/modules/documents.js?v=4.0"></script>
+    <script src="js/modules/diffusion.js?v=4.0"></script>
+    <script src="js/modules/reports.js?v=4.0"></script>
+    <script src="js/app.js?v=4.0"></script>
 </body>
 </html>

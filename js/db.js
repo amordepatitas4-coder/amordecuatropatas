@@ -472,6 +472,18 @@ class DatabaseManager {
             const stored = localStorage.getItem(DB_STORAGE_KEY);
             if (stored) {
                 this.db = JSON.parse(stored);
+
+                // Auto-corrección: Si el usuario ya limpió el sistema para producción real (0 animales y 0 gastos),
+                // asegurar que los operativos de prueba residuales del demo (proy-001, proy-002) se limpien de inmediato
+                if (Array.isArray(this.db.animales) && this.db.animales.length === 0 && Array.isArray(this.db.gastos) && this.db.gastos.length === 0) {
+                    if (Array.isArray(this.db.proyectos_esterilizacion) && this.db.proyectos_esterilizacion.some(p => p.id === 'proy-001' || p.id === 'proy-002')) {
+                        this.db.proyectos_esterilizacion = [];
+                        this.db.animales_esterilizacion = [];
+                        this.db.modo_sistema = 'produccion_limpia';
+                        this.save();
+                    }
+                }
+
                 // Garantizar existencia y actualización de documentos oficiales institucionales
                 if (!this.db.documentos || this.db.documentos.length < 3) {
                     this.db.documentos = JSON.parse(JSON.stringify(INITIAL_DATABASE_STATE.documentos));
@@ -500,9 +512,11 @@ class DatabaseManager {
                     if (!Object.prototype.hasOwnProperty.call(doc, 'entidad_id')) doc.entidad_id = null;
                 });
 
-                // Migración para cuestionarios_adopcion si no existían
-                if (!this.db.cuestionarios_adopcion || this.db.cuestionarios_adopcion.length === 0) {
-                    this.db.cuestionarios_adopcion = JSON.parse(JSON.stringify(INITIAL_DATABASE_STATE.cuestionarios_adopcion));
+                // Migración para cuestionarios_adopcion: asegurar arreglo sin sobreescribir vacíos en modo limpio
+                if (!Array.isArray(this.db.cuestionarios_adopcion)) {
+                    this.db.cuestionarios_adopcion = (this.db.modo_sistema === 'produccion_limpia')
+                        ? []
+                        : JSON.parse(JSON.stringify(INITIAL_DATABASE_STATE.cuestionarios_adopcion));
                 }
 
                 // Migración para nuevos campos en animales
@@ -518,12 +532,16 @@ class DatabaseManager {
                     });
                 }
 
-                // Migración para esterilizaciones masivas (Área Funcional 2 — Ficha Técnica §5)
-                if (!this.db.proyectos_esterilizacion || this.db.proyectos_esterilizacion.length === 0) {
-                    this.db.proyectos_esterilizacion = JSON.parse(JSON.stringify(INITIAL_DATABASE_STATE.proyectos_esterilizacion));
+                // Migración para esterilizaciones masivas: asegurar arreglo sin inyectar demo si está en producción limpia o vacío
+                if (!Array.isArray(this.db.proyectos_esterilizacion)) {
+                    this.db.proyectos_esterilizacion = (this.db.modo_sistema === 'produccion_limpia')
+                        ? []
+                        : JSON.parse(JSON.stringify(INITIAL_DATABASE_STATE.proyectos_esterilizacion));
                 }
-                if (!this.db.animales_esterilizacion || this.db.animales_esterilizacion.length === 0) {
-                    this.db.animales_esterilizacion = JSON.parse(JSON.stringify(INITIAL_DATABASE_STATE.animales_esterilizacion));
+                if (!Array.isArray(this.db.animales_esterilizacion)) {
+                    this.db.animales_esterilizacion = (this.db.modo_sistema === 'produccion_limpia')
+                        ? []
+                        : JSON.parse(JSON.stringify(INITIAL_DATABASE_STATE.animales_esterilizacion));
                 }
 
                 this.save();
@@ -568,6 +586,7 @@ class DatabaseManager {
             : JSON.parse(JSON.stringify(INITIAL_DATABASE_STATE.documentos));
 
         this.db = {
+            modo_sistema: 'produccion_limpia',
             animales: [],
             historial_estados: [],
             historial_sanitario: [],
@@ -617,6 +636,7 @@ class DatabaseManager {
      */
     async cargarDatosDemostracion() {
         this.db = JSON.parse(JSON.stringify(INITIAL_DATABASE_STATE));
+        this.db.modo_sistema = 'demo';
         this.save();
         if (window.SupabaseClient && typeof window.SupabaseClient.upsert === 'function') {
             for (const a of this.db.animales) {

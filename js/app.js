@@ -139,11 +139,45 @@ const App = {
     },
 
     bindMobileMenu() {
-        document.getElementById('mobile-menu-toggle')?.addEventListener('click', () => {
-            const isOpen = document.body.classList.toggle('sidebar-open');
-            document.getElementById('mobile-menu-toggle').setAttribute('aria-expanded', String(isOpen));
+        const toggleSidebar = () => {
+            if (window.innerWidth <= 768) {
+                const isOpen = document.body.classList.toggle('sidebar-open');
+                document.getElementById('mobile-menu-toggle')?.setAttribute('aria-expanded', String(isOpen));
+            } else {
+                const isCollapsed = document.body.classList.toggle('sidebar-collapsed');
+                localStorage.setItem('sidebar_collapsed', String(isCollapsed));
+                document.getElementById('mobile-menu-toggle')?.setAttribute('aria-expanded', String(!isCollapsed));
+            }
+        };
+
+        document.getElementById('mobile-menu-toggle')?.addEventListener('click', toggleSidebar);
+
+        document.getElementById('sidebar-collapse-btn')?.addEventListener('click', () => {
+            if (window.innerWidth <= 768) {
+                this.closeMobileMenu();
+            } else {
+                document.body.classList.add('sidebar-collapsed');
+                localStorage.setItem('sidebar_collapsed', 'true');
+                document.getElementById('mobile-menu-toggle')?.setAttribute('aria-expanded', 'false');
+            }
         });
+
         document.getElementById('sidebar-backdrop')?.addEventListener('click', () => this.closeMobileMenu());
+
+        // Al cambiar de pestaña/módulo en móvil, cerrar automáticamente el menú lateral
+        document.querySelectorAll('.sidebar-nav-item').forEach(item => {
+            item.addEventListener('click', () => {
+                if (window.innerWidth <= 768) {
+                    this.closeMobileMenu();
+                }
+            });
+        });
+
+        // Restaurar estado guardado en desktop si el usuario prefirió tener el panel contraído
+        if (window.innerWidth > 768 && localStorage.getItem('sidebar_collapsed') === 'true') {
+            document.body.classList.add('sidebar-collapsed');
+            document.getElementById('mobile-menu-toggle')?.setAttribute('aria-expanded', 'false');
+        }
     },
 
     closeMobileMenu() {
