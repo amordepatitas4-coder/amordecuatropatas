@@ -770,6 +770,53 @@ class DatabaseManager {
     }
 
     /**
+     * Elimina permanentemente una ficha de animal y sus dependencias (local y Supabase)
+     */
+    async deleteAnimal(animalId) {
+        if (!animalId) return false;
+
+        // 1. Eliminar de la base de datos local
+        this.db.animales = (this.db.animales || []).filter(a => a.id !== animalId);
+        this.db.historial_estados = (this.db.historial_estados || []).filter(e => e.animal_id !== animalId);
+        this.db.historial_sanitario = (this.db.historial_sanitario || []).filter(s => s.animal_id !== animalId);
+        this.db.animal_hogares = (this.db.animal_hogares || []).filter(ah => ah.animal_id !== animalId);
+        this.db.cuestionarios_adopcion = (this.db.cuestionarios_adopcion || []).filter(c => c.animal_id !== animalId);
+        this.db.adopciones = (this.db.adopciones || []).filter(ad => ad.animal_id !== animalId);
+        this.db.seguimientos = (this.db.seguimientos || []).filter(seg => seg.animal_id !== animalId);
+        this.db.documentos = (this.db.documentos || []).filter(d => d.animal_id !== animalId && d.entidad_id !== animalId);
+
+        // Desvincular de gastos
+        if (this.db.gastos) {
+            this.db.gastos.forEach(g => {
+                if (g.animales_ids && Array.isArray(g.animales_ids)) {
+                    g.animales_ids = g.animales_ids.filter(id => id !== animalId);
+                }
+            });
+        }
+        this.save();
+
+        // 2. Si Supabase Cloud está conectado, eliminar en cascada por orden de FKs
+        if (window.SupabaseClient && window.SupabaseClient.client) {
+            try {
+                const client = window.SupabaseClient.client;
+                await client.from('documentos').delete().eq('animal_id', animalId);
+                await client.from('gasto_animales').delete().eq('animal_id', animalId);
+                await client.from('seguimientos').delete().eq('animal_id', animalId);
+                await client.from('adopciones').delete().eq('animal_id', animalId);
+                await client.from('cuestionarios_adopcion').delete().eq('animal_id', animalId);
+                await client.from('animal_hogares').delete().eq('animal_id', animalId);
+                await client.from('historial_sanitario').delete().eq('animal_id', animalId);
+                await client.from('historial_estados').delete().eq('animal_id', animalId);
+                await client.from('animales').delete().eq('id', animalId);
+                console.log(`🗑️ [Supabase Cloud] Ficha de animal ${animalId} eliminada.`);
+            } catch (err) {
+                console.warn('[Supabase Cloud] Error al sincronizar eliminación con la nube:', err);
+            }
+        }
+        return true;
+    }
+
+    /**
      * Guarda o actualiza un animal
      */
     saveAnimal(animalData) {

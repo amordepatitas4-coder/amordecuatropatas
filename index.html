@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="Sistema Web de Gestión — Fundación Amor de Cuatro Patas (Proyecto A+S)">
     <title>Fundación Amor de Cuatro Patas | Sistema Web de Gestión</title>
-    <link rel="stylesheet" href="index.css?v=4.3">
+    <link rel="stylesheet" href="index.css?v=4.4">
 </head>
 <body>
     <section id="auth-gate" class="auth-gate" aria-labelledby="auth-title">
@@ -1013,8 +1013,12 @@
             <div class="modal-body" id="ficha-integral-content">
                 <!-- Se inyecta dinámicamente con pestañas -->
             </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary btn-modal-cancel">✕ Cerrar Ficha</button>
+            <div class="modal-footer modal-footer-between">
+                <button type="button" id="btn-delete-ficha-integral" class="btn btn-danger" style="display: none;">🗑️ Eliminar Ficha</button>
+                <div class="modal-footer-actions">
+                    <button type="button" id="btn-edit-ficha-integral" class="btn btn-primary" style="display: none;">✏️ Editar</button>
+                    <button type="button" class="btn btn-secondary btn-modal-cancel">✕ Cerrar Ficha</button>
+                </div>
             </div>
         </div>
     </div>
@@ -1172,9 +1176,12 @@
                         <textarea id="animal-form-personalidad" rows="2" class="form-control" placeholder="Comportamiento con niños, otros animales, paseos..."></textarea>
                     </div>
                 </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary btn-modal-cancel">Cancelar</button>
-                    <button type="submit" class="btn btn-primary">Guardar Ficha</button>
+                <div class="modal-footer modal-footer-between">
+                    <button type="button" id="btn-delete-animal-modal" class="btn btn-danger" style="display: none;">🗑️ Eliminar Ficha</button>
+                    <div class="modal-footer-actions">
+                        <button type="button" class="btn btn-secondary btn-modal-cancel">Cancelar</button>
+                        <button type="submit" class="btn btn-primary">Guardar Ficha</button>
+                    </div>
                 </div>
             </form>
         </div>

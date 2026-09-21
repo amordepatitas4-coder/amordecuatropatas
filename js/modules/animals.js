@@ -69,6 +69,17 @@ const AnimalsModule = {
             });
         }
 
+        // Botón para eliminar ficha desde el modal de edición
+        const btnDeleteModal = document.getElementById('btn-delete-animal-modal');
+        if (btnDeleteModal) {
+            btnDeleteModal.addEventListener('click', () => {
+                const animalId = document.getElementById('animal-form-id').value;
+                if (animalId) {
+                    this.deleteAnimal(animalId);
+                }
+            });
+        }
+
         // Compresión y carga de Foto 1 (Principal)
         const file1 = document.getElementById('animal-file-foto1');
         if (file1) {
@@ -243,6 +254,9 @@ const AnimalsModule = {
                             <button class="btn btn-primary btn-sm" onclick="AnimalsModule.openAnimalModal('${animal.id}')">
                                 ✏️ Editar
                             </button>
+                            <button class="btn btn-danger btn-sm" onclick="event.stopPropagation(); AnimalsModule.deleteAnimal('${animal.id}')" title="Eliminar ficha permanentemente">
+                                🗑️ Borrar
+                            </button>
                             ${animal.estado_actual === 'adoptado' && tieneFotos ? `
                                 <button class="btn btn-warning btn-sm" onclick="event.stopPropagation(); AnimalsModule.liberarFotos('${animal.id}')" title="Liberar fotos operativas de almacenamiento (Sección 10 del Word)">
                                     🧹 Liberar Fotos
@@ -304,8 +318,11 @@ const AnimalsModule = {
         this.updatePhotoPreview('preview-foto1', '');
         this.updatePhotoPreview('preview-foto2', '');
 
+        const btnDeleteModal = document.getElementById('btn-delete-animal-modal');
+
         if (animalId) {
             title.textContent = '✏️ Editar Ficha de Animal';
+            if (btnDeleteModal) btnDeleteModal.style.display = 'inline-flex';
             const animal = window.DB.db.animales.find(a => a.id === animalId);
             if (animal) {
                 document.getElementById('animal-form-id').value = animal.id;
@@ -334,6 +351,7 @@ const AnimalsModule = {
             }
         } else {
             title.textContent = '🐾 Registrar Nuevo Rescate';
+            if (btnDeleteModal) btnDeleteModal.style.display = 'none';
             document.getElementById('animal-form-estado').value = 'rescate';
             document.getElementById('animal-form-esterilizado').value = 'pendiente';
             document.getElementById('animal-form-energia').value = 'Medio';
@@ -730,7 +748,47 @@ const AnimalsModule = {
             </div>
         `;
 
+        const btnDeleteFicha = document.getElementById('btn-delete-ficha-integral');
+        if (btnDeleteFicha) {
+            btnDeleteFicha.style.display = 'inline-flex';
+            btnDeleteFicha.onclick = () => this.deleteAnimal(animal.id);
+        }
+        const btnEditFicha = document.getElementById('btn-edit-ficha-integral');
+        if (btnEditFicha) {
+            btnEditFicha.style.display = 'inline-flex';
+            btnEditFicha.onclick = () => {
+                modal.classList.remove('active');
+                this.openAnimalModal(animal.id);
+            };
+        }
+
         modal.classList.add('active');
+    },
+
+    /**
+     * Elimina una ficha de animal previa confirmación del usuario
+     */
+    async deleteAnimal(animalId) {
+        const animal = window.DB.db.animales.find(a => a.id === animalId);
+        if (!animal) return;
+        const confirmMsg = `¿Estás seguro/a de que deseas eliminar permanentemente la ficha de "${animal.nombre}"?\n\n` +
+            `• Se borrarán sus datos, fotos y atenciones sanitarias asociadas.\n` +
+            `• Esta acción no se puede deshacer.`;
+        if (confirm(confirmMsg)) {
+            await window.DB.deleteAnimal(animalId);
+            const modal = document.getElementById('modal-animal-form');
+            if (modal) modal.classList.remove('active');
+            const modalFicha = document.getElementById('modal-ficha-integral');
+            if (modalFicha) modalFicha.classList.remove('active');
+            this.render();
+            if (window.App && typeof window.App.updateKPIs === 'function') {
+                window.App.updateKPIs();
+            }
+            if (window.PublicAdoptions && typeof window.PublicAdoptions.renderAdoptionCatalog === 'function') {
+                window.PublicAdoptions.renderAdoptionCatalog();
+            }
+            window.App.showNotification(`🗑️ Ficha de "${animal.nombre}" eliminada correctamente.`);
+        }
     },
 
     /**
