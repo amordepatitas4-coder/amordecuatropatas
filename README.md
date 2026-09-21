@@ -1,75 +1,95 @@
-# Proyecto A+S 🚀 — Fundación Amor de Cuatro Patas
+# Proyecto A+S 🐾 — Fundación Amor de Cuatro Patas
 
-Sistema Web Integral de Gestión de Rescate y Adopción Animal, desarrollado en contexto **Aprendizaje + Servicio (A+S)** para la **Fundación Amor de Cuatro Patas**.
-
-> **Estado verificado (7 de septiembre de 2026):** MVP local con autenticación obligatoria, filtros e integridad mejorados. La conexión con Supabase, la IA generativa remota, el hosting público y la validación firmada del socio continúan pendientes. Consulte [`Registro de Cambios y Estado.md`](Registro de Cambios y Estado.md).
+Sistema Web Integral de Gestión de Rescates, Trazabilidad Sanitaria y Adopciones Responsables, desarrollado bajo el modelo **Aprendizaje + Servicio (A+S)** para la **Fundación Amor de Cuatro Patas**.
 
 ---
 
-## 📚 Documentación Técnica y Académica Completa
+## 🌐 Acceso y Despliegue en Línea
 
-0. 🎓 **[`Informe Final del Proyecto.md`](Informe Final del Proyecto.md)**:
-   - **Monografía e Informe Final Académico Maestro (~24 páginas de extensión y profundidad formal).**
-   - Estructurado en 12 capítulos: Resumen Ejecutivo, Marco Contextual Maule, Ley 21.020, Árbol de Problemas, Fundamentación A+S, Matriz MoSCoW RF/RNF, Arquitectura SPA, Diccionario de Datos Relacional, Casos de Prueba QA, Validación Comunitaria y Hoja de Ruta.
+El sistema se encuentra desplegado y disponible públicamente en:
 
-1. 📋 **[`Documentación del Proyecto.md`](Documentación del Proyecto.md)**:
-   - Ficha técnica de especificación de requisitos levantados con el socio comunitario.
+👉 **[https://amordepatitas4-coder.github.io/amordecuatropatas/](https://amordepatitas4-coder.github.io/amordecuatropatas/)**
 
-2. 📖 **[`Documentación del Código.md`](Documentación del Código.md)**:
-   - Explicación didáctica y técnica de cada archivo, función y módulo JavaScript.
-
-3. 📘 **[`Manual de Usuario.md`](Manual de Usuario.md)**:
-   - Guía práctica no técnica para la Presidenta y la Tesorera de la Fundación.
-
-4. 🧪 **[`Plan de Pruebas.md`](Plan de Pruebas.md)**:
-   - Plan y matriz formal de pruebas funcionales (casos de prueba CP-01 a CP-13).
-
-5. 🤝 **[`Pauta de Validación Socio Comunitario.md`](Pauta de Validación Socio Comunitario.md)**:
-   - Instrumento formal de validación y escala de usabilidad SUS para el socio comunitario.
-
-6. 🎤 **[`Guía de Exposición del Proyecto.md`](Guía de Exposición del Proyecto.md)**:
-   - Guion de presentación y respuestas preparadas a preguntas de la comisión académica.
-
-7. 🚀 **[`Guía de Despliegue y Alojamiento.md`](Guía de Despliegue y Alojamiento.md)**:
-   - Instrucciones para publicar el sitio web gratis en GitHub Pages y Vercel.
-
-8. 🗄️ **[`supabase_schema.sql`](supabase_schema.sql)**:
-   - Script SQL relacional listo para ejecutar en PostgreSQL / Supabase con RLS y datos semilla.
-
-9. ✅ **[`Registro de Cambios y Estado.md`](Registro de Cambios y Estado.md)**:
-   - Cambios implementados, pruebas ejecutadas, límites actuales y orden seguro de conexión.
+* **Portal Ciudadano (Público):** Permite a cualquier persona de la comunidad ver el catálogo de perritos y gatitos rescatados y postular a una adopción responsable en línea regida por la Ley 21.020, sin necesidad de contraseñas.
+* **Panel de Gestión (Equipo / Directiva):** Acceso administrativo protegido para la Presidenta y la Tesorera de la Fundación mediante el botón superior **`🔒 Ingreso Equipo / Directiva`**.
 
 ---
 
-## 📁 Estructura del Proyecto
+## ✨ Características Principales
+
+1. **🐾 Portal Ciudadano de Adopción:**
+   - Catálogo interactivo con filtros por especie (Caninos y Felinos).
+   - Formulario digital de postulación basado en los estándares de la **Ley 21.020 de Tenencia Responsable**.
+   - Evaluación y puntaje automático de aptitud del postulante.
+
+2. **📋 Fichas Integrales de Animales:**
+   - Registro de datos biométricos, fotografías, estado operativo, personalidad y descripción.
+   - Pestañas completas de historial sanitario, hogares temporales, gastos y postulaciones asociadas.
+
+3. **🩺 Historial Sanitario y Tratamientos:**
+   - Control de vacunas (óctuple, antirrábica, triple felina), desparasitaciones, cirugías y tratamientos clínicos.
+
+4. **✂️ Operativos de Esterilización Masiva:**
+   - Planificación de campañas en terreno para animales comunitarios y en situación de calle.
+   - Registro de pacientes, control de microchips y distribución por especie.
+
+5. **🏡 Hogares Temporales y Familias de Paso:**
+   - Base de datos de hogares de acogida con capacidad y asignación activa de rescatados.
+
+6. **🤝 Formalización de Adopciones y Seguimiento:**
+   - Generación de contratos oficiales con número de folio único.
+   - Bitácora de seguimiento post-adopción con botón directo de contacto por **WhatsApp**.
+
+7. **💰 Gestión Financiera y Finanzas Claras:**
+   - Registro clasificado de ingresos, donaciones y egresos por rescate o general.
+
+8. **🎨 Difusión y Asistente de Flyers:**
+   - Generador automático de afiches en HTML5 Canvas listos para descargar y compartir en redes sociales.
+
+9. **☁️ Sincronización en la Nube (Supabase Cloud):**
+   - Base de datos relacional PostgreSQL alojada en región São Paulo con redundancia local offline.
+
+---
+
+## 📁 Estructura del Código
 
 ```
 A_S/
-├── index.html                   # Interfaz completa de la aplicación SPA
-├── index.css                    # Sistema de diseño responsivo y Glassmorphic
-├── supabase_schema.sql          # Esquema de base de datos relacional PostgreSQL / Supabase
-├── Registro de Cambios y Estado.md # Estado comprobado y pendientes reales
-├── Documentación del Proyecto.md # Levantamiento de requerimientos y especificación
-├── Documentación del Código.md      # Manual explicativo del código fuente
-├── README.md                    # Guía general de inicio
+├── index.html                   # Interfaz completa (Portal Público + Panel SPA)
+├── index.css                    # Sistema de diseño responsivo y tema visual moderno
+├── supabase_schema.sql          # Esquema relacional SQL (tablas, RLS y políticas)
+├── README.md                    # Descripción general y acceso al proyecto
 └── js/
-    ├── db.js                    # Motor de datos relacional y persistencia local (con exportación JSON)
-    ├── auth.js                  # Configuración de cuentas, login y sesión local protegida
     ├── app.js                   # Controlador principal y enrutador SPA
+    ├── auth.js                  # Control de accesos criptográfico (PBKDF2) y roles
+    ├── db.js                    # Motor de datos relacional y persistencia local
+    ├── supabase_client.js       # Cliente de sincronización con Supabase Cloud
     └── modules/
-        ├── animals.js           # Fichas de animales, filtros y Ficha Integral con pestañas
-        ├── health.js            # Historial sanitario cronológico y atenciones médicas
-        ├── homes.js             # Hogares temporales y familias de paso
-        ├── adoptions.js         # Adopciones, contratos y seguimientos post-adopción
-        ├── expenses.js          # Control de gastos clasificados (por animal o general)
-        ├── documents.js         # Repositorio de documentos oficiales y enlaces Drive
-        ├── diffusion.js         # Borradores locales y creador de Flyers en Canvas
-        └── reports.js           # Indicadores clave (KPIs), métricas y reportes imprimibles
+        ├── adoptions.js         # Portal público ciudadano, adopciones y WhatsApp
+        ├── animals.js           # Fichas clínicas y catálogo de animales
+        ├── health.js            # Historial sanitario cronológico
+        ├── homes.js             # Hogares temporales y asignaciones
+        ├── esterilizaciones.js  # Módulo de operativos masivos en terreno
+        ├── expenses.js          # Control de gastos e ingresos
+        ├── documents.js         # Repositorio de actas y contratos
+        ├── diffusion.js         # Creador de flyers en HTML5 Canvas
+        └── reports.js           # Indicadores de gestión y reportes imprimibles
 ```
 
 ---
 
-## 🌐 Cómo Ejecutar y Visualizar el Proyecto
+## 🚀 Cómo Ejecutar el Proyecto
 
-Puedes abrir directamente el archivo en cualquier navegador web moderno:
-👉 Abre `index.html` mediante un servidor local desde la carpeta del proyecto.
+### Opción 1: En Línea (Recomendada)
+Accede directamente desde cualquier dispositivo o navegador web moderno:
+👉 **[https://amordepatitas4-coder.github.io/amordecuatropatas/](https://amordepatitas4-coder.github.io/amordecuatropatas/)**
+
+### Opción 2: Ejecución Local
+Si deseas ejecutar o editar el proyecto en tu entorno local (VS Code, NetBeans u otro editor):
+1. Clona el repositorio:
+   ```bash
+   git clone https://github.com/amordepatitas4-coder/amordecuatropatas.git
+   ```
+2. Inicia un servidor local ligero en la carpeta del proyecto:
+   * Con **Python**: `python -m http.server 8080` y abre `http://localhost:8080`
+   * Con la extensión **Live Server** de VS Code: clic derecho en `index.html` > *Open with Live Server*.
