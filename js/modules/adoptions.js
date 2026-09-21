@@ -128,6 +128,10 @@ const AdoptionsModule = {
             const badgeClass = c.estado_evaluacion === 'aprobado' ? 'badge-green' : (c.estado_evaluacion === 'requiere_entrevista' ? 'badge-amber' : 'badge-red');
             const badgeLabel = c.estado_evaluacion === 'aprobado' ? '🌟 Aprobado' : (c.estado_evaluacion === 'requiere_entrevista' ? '⚠️ Entrevista' : '❌ Observaciones');
 
+            const cleanPhone = (c.telefono || '').replace(/[^0-9]/g, '');
+            const waPhone = cleanPhone.startsWith('56') ? cleanPhone : (cleanPhone.length === 9 ? '56' + cleanPhone : cleanPhone);
+            const waMsg = encodeURIComponent(`Hola ${c.nombre_postulante}, te saludamos desde la Fundación Amor de Cuatro Patas respecto a tu postulación para adoptar a ${animal ? animal.nombre : 'una de nuestras mascotas'}. Queremos conversar contigo sobre los siguientes pasos del proceso de adopción.`);
+
             return `
                 <tr>
                     <td><strong>${c.fecha_postulacion || '-'}</strong></td>
@@ -155,6 +159,11 @@ const AdoptionsModule = {
                             <button class="btn btn-secondary btn-sm" onclick="AdoptionsModule.verDetalleCuestionario('${c.id}')" title="Ver cuestionario completo">
                                 📋 Detalle
                             </button>
+                            ${waPhone ? `
+                                <a href="https://wa.me/${waPhone}?text=${waMsg}" target="_blank" rel="noopener" class="btn btn-sm" style="background:#25D366; color:#fff; display:inline-flex; align-items:center; gap:0.25rem;" title="Contactar por WhatsApp">
+                                    💬 WhatsApp
+                                </a>
+                            ` : ''}
                             ${c.estado_evaluacion === 'aprobado' ? `
                                 <button class="btn btn-accent btn-sm" onclick="AdoptionsModule.convertirPostulanteAAdopcion('${c.id}', '${c.animal_id || ''}')" title="Concretar adopción con este postulante">
                                     🤝 Formalizar
@@ -422,4 +431,256 @@ const AdoptionsModule = {
     }
 };
 
+/**
+ * ==============================================================================
+ * PORTAL PÚBLICO CIUDADANO: Catálogo y Formulario de Postulación Abierto
+ * Permite a cualquier persona ver animales y postular sin necesidad de contraseñas.
+ * ==============================================================================
+ */
+const PublicAdoptions = {
+    activeFilter: 'todos',
+    selectedAnimal: null,
+
+    init(preselectedAnimalId = null) {
+        if (preselectedAnimalId) {
+            this.openForm(preselectedAnimalId);
+        } else {
+            this.showCatalog();
+        }
+    },
+
+    showCatalog() {
+        const viewCatalog = document.getElementById('public-view-catalog');
+        const viewForm = document.getElementById('public-view-form');
+        const viewSuccess = document.getElementById('public-view-success');
+
+        if (viewCatalog) viewCatalog.style.display = 'block';
+        if (viewForm) viewForm.style.display = 'none';
+        if (viewSuccess) viewSuccess.style.display = 'none';
+
+        this.renderCatalog();
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    },
+
+    filterCatalog(filter) {
+        this.activeFilter = filter;
+        document.querySelectorAll('.public-filter-btn').forEach(btn => {
+            btn.classList.toggle('active', btn.getAttribute('data-filter') === filter);
+        });
+        this.renderCatalog();
+    },
+
+    renderCatalog() {
+        const grid = document.getElementById('public-pets-grid');
+        if (!grid) return;
+
+        const animales = (window.DB && window.DB.db && window.DB.db.animales) ? window.DB.db.animales : [];
+        const disponibles = animales.filter(a => a.estado_actual !== 'adoptado');
+
+        // Actualizar contadores
+        const countTodos = document.getElementById('public-count-todos');
+        const countCaninos = document.getElementById('public-count-caninos');
+        const countFelinos = document.getElementById('public-count-felinos');
+
+        if (countTodos) countTodos.textContent = disponibles.length;
+        if (countCaninos) countCaninos.textContent = disponibles.filter(a => a.especie === 'Canino').length;
+        if (countFelinos) countFelinos.textContent = disponibles.filter(a => a.especie === 'Felino').length;
+
+        let lista = disponibles;
+        if (this.activeFilter !== 'todos') {
+            lista = disponibles.filter(a => a.especie === this.activeFilter);
+        }
+
+        if (lista.length === 0) {
+            grid.innerHTML = `
+                <div class="public-empty-notice">
+                    <span>🐾</span>
+                    <h3>No hay mascotas en esta categoría en este momento</h3>
+                    <p>Pronto tendremos más rescatados listos para encontrar un hogar definitivo.</p>
+                </div>
+            `;
+            return;
+        }
+
+        grid.innerHTML = lista.map(animal => {
+            const foto = animal.foto_operativa_url || animal.foto_secundaria_url || (animal.especie === 'Felino'
+                ? 'https://images.unsplash.com/photo-1514888286974-6c03e2ca1dba?auto=format&fit=crop&w=600&q=80'
+                : 'https://images.unsplash.com/photo-1543466835-00a7907e9de1?auto=format&fit=crop&w=600&q=80');
+
+            const especieIcono = animal.especie === 'Felino' ? '🐱' : '🐶';
+
+            return `
+                <div class="public-pet-card">
+                    <div class="public-pet-img-wrap">
+                        <img src="${foto}" alt="${animal.nombre}" class="public-pet-img" onerror="this.src='https://images.unsplash.com/photo-1548767797-d8c844163c4c?auto=format&fit=crop&w=600&q=80'">
+                        <span class="public-pet-species-badge">${especieIcono} ${animal.especie}</span>
+                        <span class="public-pet-status-badge">En Adopción</span>
+                    </div>
+                    <div class="public-pet-info">
+                        <div class="public-pet-header">
+                            <h3>${animal.nombre}</h3>
+                            <span class="public-pet-breed">${animal.raza || 'Mestizo'}</span>
+                        </div>
+                        <div class="public-pet-tags">
+                            <span class="tag-pill">🎂 ${animal.edad_aprox || 'Adulto'}</span>
+                            <span class="tag-pill">⚖️ ${animal.peso_kg ? `${animal.peso_kg} kg` : (animal.tamano || 'Mediano')}</span>
+                            <span class="tag-pill">⚥ ${animal.sexo || 'Macho'}</span>
+                        </div>
+                        <p class="public-pet-desc">
+                            ${animal.personalidad || animal.descripcion || 'Cariñoso, sociable y listo para integrarse a una familia responsable.'}
+                        </p>
+                        <button type="button" class="btn btn-primary full-width public-btn-adopt" onclick="PublicAdoptions.openForm('${animal.id}')">
+                            🐾 Quiero Adoptar a ${animal.nombre}
+                        </button>
+                    </div>
+                </div>
+            `;
+        }).join('');
+    },
+
+    openForm(animalId) {
+        const animales = (window.DB && window.DB.db && window.DB.db.animales) ? window.DB.db.animales : [];
+        const animal = animales.find(a => a.id === animalId) || null;
+        this.selectedAnimal = animal;
+
+        const inputAnimalId = document.getElementById('pub-animal-id');
+        if (inputAnimalId) inputAnimalId.value = animal ? animal.id : '';
+
+        const cardContainer = document.getElementById('public-selected-animal-card');
+        if (cardContainer) {
+            if (animal) {
+                const foto = animal.foto_operativa_url || animal.foto_secundaria_url || 'https://images.unsplash.com/photo-1543466835-00a7907e9de1?auto=format&fit=crop&w=600&q=80';
+                cardContainer.innerHTML = `
+                    <div class="selected-animal-summary">
+                        <img src="${foto}" alt="${animal.nombre}" class="selected-animal-thumb" onerror="this.src='https://images.unsplash.com/photo-1548767797-d8c844163c4c?auto=format&fit=crop&w=600&q=80'">
+                        <div class="selected-animal-meta">
+                            <span class="badge-tag badge-green">🌟 Postulando para adoptar a:</span>
+                            <h3>${animal.nombre} (${animal.especie} • ${animal.raza || 'Mestizo'})</h3>
+                            <p><strong>Edad aprox:</strong> ${animal.edad_aprox || 'Adulto'} • <strong>Tamaño:</strong> ${animal.tamano || 'Mediano'} • <strong>Sexo:</strong> ${animal.sexo || 'Macho'}</p>
+                        </div>
+                    </div>
+                `;
+            } else {
+                cardContainer.innerHTML = `
+                    <div class="selected-animal-summary">
+                        <div class="selected-animal-meta">
+                            <span class="badge-tag">🐾 Postulación Abierta</span>
+                            <h3>Postulación General de Adopción</h3>
+                            <p>Te ayudaremos a encontrar la mascota ideal para tu estilo de vida y hogar.</p>
+                        </div>
+                    </div>
+                `;
+            }
+        }
+
+        const viewCatalog = document.getElementById('public-view-catalog');
+        const viewForm = document.getElementById('public-view-form');
+        const viewSuccess = document.getElementById('public-view-success');
+
+        if (viewCatalog) viewCatalog.style.display = 'none';
+        if (viewForm) viewForm.style.display = 'block';
+        if (viewSuccess) viewSuccess.style.display = 'none';
+
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    },
+
+    handleSubmit(event) {
+        event.preventDefault();
+
+        const nombre = document.getElementById('pub-nombre').value.trim();
+        const rut = document.getElementById('pub-rut').value.trim();
+        const telefono = document.getElementById('pub-telefono').value.trim();
+        const email = document.getElementById('pub-email').value.trim();
+        const comuna = document.getElementById('pub-comuna').value.trim();
+        const direccion = document.getElementById('pub-direccion').value.trim();
+        const vivienda = document.getElementById('pub-vivienda').value;
+        const propiedad = document.getElementById('pub-propiedad').value;
+        const consenso = document.getElementById('pub-consenso').value;
+        const solvencia = document.getElementById('pub-solvencia').value;
+        const tiempo = document.getElementById('pub-tiempo').value;
+        const experiencia = document.getElementById('pub-experiencia').value.trim();
+        const motivo = document.getElementById('pub-motivo').value.trim();
+        const animalId = document.getElementById('pub-animal-id').value;
+
+        // Evaluación preliminar de cumplimiento Ley 21.020
+        let puntaje = 0;
+        if (vivienda === 'casa_patio' || vivienda === 'dpto_mallas' || vivienda === 'parcela') puntaje += 25;
+        if (propiedad === 'propio' || propiedad === 'arriendo_permite') puntaje += 20;
+        if (consenso === 'si') puntaje += 20;
+        if (solvencia === 'pleno') puntaje += 15;
+        if (tiempo === '0-4') puntaje += 20; else if (tiempo === '4-8') puntaje += 15;
+
+        let estado_evaluacion = 'aprobado';
+        if (puntaje >= 80) {
+            estado_evaluacion = 'aprobado';
+        } else if (puntaje >= 60) {
+            estado_evaluacion = 'requiere_entrevista';
+        } else {
+            estado_evaluacion = 'no_recomendado';
+        }
+
+        const direccionCompleta = `${direccion ? direccion + ', ' : ''}${comuna}`;
+
+        // 1. Guardar adoptante en el sistema
+        const adoptante = window.DB.saveAdoptante({
+            rut,
+            nombre,
+            telefono,
+            email,
+            direccion: direccionCompleta,
+            evaluacion_estado,
+            notas: `Postulación en línea. Puntaje: ${puntaje}/100. Vivienda: ${vivienda}.`
+        });
+
+        // 2. Guardar cuestionario oficial (RF-07) con sincronización a Supabase Cloud
+        const nuevoCuestionario = window.DB.saveCuestionario({
+            animal_id: animalId || null,
+            nombre_postulante: nombre,
+            rut,
+            telefono,
+            email,
+            direccion: direccionCompleta,
+            tipo_vivienda: vivienda,
+            tiene_patio_cerrado: (vivienda === 'casa_patio' || vivienda === 'dpto_mallas' || vivienda === 'parcela'),
+            acuerdo_familia: (consenso === 'si'),
+            presupuesto_veterinario: (solvencia === 'pleno'),
+            experiencia_previa: experiencia || 'Sin información adicional.',
+            motivo_adopcion: motivo,
+            estado_evaluacion,
+            puntaje,
+            notas_evaluacion: `Postulación ciudadana vía Web. Puntaje preliminar: ${puntaje}/100. Situación: ${propiedad}, Horas solo: ${tiempo}.`,
+            fecha_postulacion: new Date().toISOString().split('T')[0]
+        });
+
+        // 3. Mostrar pantalla de éxito
+        this.showSuccess(nuevoCuestionario, this.selectedAnimal);
+
+        // Limpiar formulario
+        document.getElementById('public-adoption-form').reset();
+    },
+
+    showSuccess(cuestionario, animal) {
+        const viewCatalog = document.getElementById('public-view-catalog');
+        const viewForm = document.getElementById('public-view-form');
+        const viewSuccess = document.getElementById('public-view-success');
+
+        if (viewCatalog) viewCatalog.style.display = 'none';
+        if (viewForm) viewForm.style.display = 'none';
+        if (viewSuccess) viewSuccess.style.display = 'block';
+
+        const elFolio = document.getElementById('pub-success-folio');
+        const elAnimal = document.getElementById('pub-success-animal');
+        const elNombre = document.getElementById('pub-success-nombre');
+        const elTel = document.getElementById('pub-success-tel');
+
+        if (elFolio) elFolio.textContent = (cuestionario.id || 'CUE-2026').toUpperCase();
+        if (elAnimal) elAnimal.textContent = animal ? `${animal.nombre} (${animal.especie})` : 'Mascota recomendada';
+        if (elNombre) elNombre.textContent = cuestionario.nombre_postulante;
+        if (elTel) elTel.textContent = cuestionario.telefono;
+
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+};
+
 window.AdoptionsModule = AdoptionsModule;
+window.PublicAdoptions = PublicAdoptions;

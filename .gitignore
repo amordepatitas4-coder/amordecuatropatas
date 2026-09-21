@@ -19,3 +19,19 @@ __pycache__/
 # Herramientas locales y ejecutables
 cloudflared.exe
 test_supabase_cloud.py
+.github/
+
+# Documentación interna, informes, manuales y registros de etapa (Privados / No para GitHub)
+*.docx
+*.doc
+*.pdf
+*.xlsx
+*.xls
+Informe*.md
+Manual*.md
+Documentación*.md
+Guía*.md
+Pauta*.md
+Plan*.md
+Registro*.md
+generate_word_report.py

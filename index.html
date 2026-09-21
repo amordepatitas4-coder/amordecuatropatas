@@ -63,11 +63,223 @@
                         <button type="button" class="btn btn-secondary btn-sm full-width" onclick="AuthModule.showSetup()" title="Restablecer o actualizar las contraseñas">
                             🔑 Restablecer / Cambiar Contraseñas
                         </button>
+                        <button type="button" class="btn btn-secondary btn-sm full-width" style="margin-top: 0.5rem;" onclick="AuthModule.showPublicPortal()">
+                            ⬅ Volver al Portal de Adopciones
+                        </button>
                     </div>
                 </form>
             </div>
             <p class="auth-security-note">Sesión protegida con cierre automático tras 30 minutos de inactividad.</p>
         </div>
+    </section>
+
+    <!-- ======================================================================
+         PORTAL PÚBLICO DE POSTULACIÓN A ADOPCIÓN (ACCESO CIUDADANO SIN CLAVE)
+         ====================================================================== -->
+    <section id="public-portal" class="public-portal-wrapper" hidden>
+        <header class="public-header">
+            <div class="public-header-content">
+                <div class="public-brand">
+                    <span class="public-brand-logo">🐾</span>
+                    <div>
+                        <h1>Fundación Amor de Cuatro Patas</h1>
+                        <p class="public-subtitle">Portal Ciudadano de Adopciones Responsables • Ley 21.020</p>
+                    </div>
+                </div>
+                <div class="public-header-actions" id="public-auth-actions">
+                    <button type="button" class="btn btn-secondary btn-sm" onclick="AuthModule.showLogin()">
+                        🔒 Ingreso Equipo / Directiva
+                    </button>
+                </div>
+            </div>
+        </header>
+
+        <main class="public-main-container">
+            <!-- VISTA 1: CATÁLOGO DE MASCOTAS DISPONIBLES -->
+            <div id="public-view-catalog" class="public-view">
+                <div class="public-hero-card">
+                    <div class="public-hero-badge">❤️ Adopta, no compres</div>
+                    <h2>¡Dales una segunda oportunidad!</h2>
+                    <p>Nuestros animales rescatados esperan por un hogar amoroso y responsable. Revisa los candidatos disponibles y envía tu postulación de adopción en línea.</p>
+                    <div class="public-filter-bar">
+                        <button type="button" class="public-filter-btn active" data-filter="todos" onclick="PublicAdoptions.filterCatalog('todos')">
+                            🐾 Todos (<span id="public-count-todos">0</span>)
+                        </button>
+                        <button type="button" class="public-filter-btn" data-filter="Canino" onclick="PublicAdoptions.filterCatalog('Canino')">
+                            🐶 Perros (<span id="public-count-caninos">0</span>)
+                        </button>
+                        <button type="button" class="public-filter-btn" data-filter="Felino" onclick="PublicAdoptions.filterCatalog('Felino')">
+                            🐱 Gatos (<span id="public-count-felinos">0</span>)
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Grid de Mascotas -->
+                <div id="public-pets-grid" class="public-pets-grid">
+                    <!-- Tarjetas generadas dinámicamente -->
+                </div>
+            </div>
+
+            <!-- VISTA 2: FORMULARIO DE POSTULACIÓN DIGITAL (LEY 21.020) -->
+            <div id="public-view-form" class="public-view" style="display: none;">
+                <div class="public-form-header">
+                    <button type="button" class="btn btn-secondary btn-sm" onclick="PublicAdoptions.showCatalog()">
+                        ⬅ Volver al Catálogo
+                    </button>
+                    <h2>Formulario de Postulación a Adopción</h2>
+                </div>
+
+                <!-- Tarjeta Mascota Seleccionada -->
+                <div id="public-selected-animal-card" class="public-selected-card">
+                    <!-- Contenido dinámico del animal elegido -->
+                </div>
+
+                <form id="public-adoption-form" class="public-form-card" onsubmit="PublicAdoptions.handleSubmit(event)">
+                    <input type="hidden" id="pub-animal-id" value="">
+                    
+                    <div class="form-section-title">
+                        <span>1</span> Datos Personales del Postulante
+                    </div>
+                    <div class="form-grid-2">
+                        <div class="form-group">
+                            <label for="pub-nombre">Nombre y Apellidos completos *</label>
+                            <input type="text" id="pub-nombre" class="form-control" required placeholder="Ej: Marcela González Pérez">
+                        </div>
+                        <div class="form-group">
+                            <label for="pub-rut">RUT (Cédula de Identidad) *</label>
+                            <input type="text" id="pub-rut" class="form-control" required placeholder="Ej: 12.345.678-9">
+                        </div>
+                    </div>
+
+                    <div class="form-grid-2">
+                        <div class="form-group">
+                            <label for="pub-telefono">Teléfono / WhatsApp de contacto *</label>
+                            <input type="tel" id="pub-telefono" class="form-control" required placeholder="+56 9 1234 5678">
+                        </div>
+                        <div class="form-group">
+                            <label for="pub-email">Correo Electrónico *</label>
+                            <input type="email" id="pub-email" class="form-control" required placeholder="tuemail@ejemplo.com">
+                        </div>
+                    </div>
+
+                    <div class="form-grid-2">
+                        <div class="form-group">
+                            <label for="pub-comuna">Comuna / Ciudad de residencia *</label>
+                            <input type="text" id="pub-comuna" class="form-control" required placeholder="Ej: Rancagua, Machalí, etc.">
+                        </div>
+                        <div class="form-group">
+                            <label for="pub-direccion">Dirección particular</label>
+                            <input type="text" id="pub-direccion" class="form-control" placeholder="Calle, número, depto o villa">
+                        </div>
+                    </div>
+
+                    <div class="form-section-title" style="margin-top: 1.5rem;">
+                        <span>2</span> Condiciones del Hogar y Tenencia Responsable (Ley 21.020)
+                    </div>
+
+                    <div class="form-grid-2">
+                        <div class="form-group">
+                            <label for="pub-vivienda">Tipo de Vivienda *</label>
+                            <select id="pub-vivienda" class="form-control" required>
+                                <option value="casa_patio">Casa con patio cerrado / cercado</option>
+                                <option value="dpto_mallas">Departamento con mallas de seguridad</option>
+                                <option value="dpto_sin_mallas">Departamento sin mallas instaladas</option>
+                                <option value="casa_sin_patio">Casa sin patio o con cierres abiertos</option>
+                                <option value="parcela">Parcela / Sitio rural cerrado</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="pub-propiedad">Situación del inmueble *</label>
+                            <select id="pub-propiedad" class="form-control" required>
+                                <option value="propio">Vivienda propia</option>
+                                <option value="arriendo_permite">Arriendo (autorizado expresamente tener mascotas)</option>
+                                <option value="familiar">Vivienda familiar / compartida</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-grid-2">
+                        <div class="form-group">
+                            <label for="pub-consenso">¿Toda la familia está de acuerdo en adoptar? *</label>
+                            <select id="pub-consenso" class="form-control" required>
+                                <option value="si">Sí, todos los integrantes están de acuerdo y comprometidos</option>
+                                <option value="en_proceso">En conversación, pero la mayoría aprueba</option>
+                                <option value="no">No todos están enterados aún</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="pub-solvencia">¿Cuentas con presupuesto para alimentación y atención veterinaria? *</label>
+                            <select id="pub-solvencia" class="form-control" required>
+                                <option value="pleno">Sí, cuento con solvencia para alimento de calidad, vacunas y emergencias</option>
+                                <option value="ajustado">Presupuesto justo pero responsable</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="pub-tiempo">¿Cuántas horas promedio pasaría el animal sin supervisión al día? *</label>
+                        <select id="pub-tiempo" class="form-control" required>
+                            <option value="0-4">Menos de 4 horas (casi siempre hay alguien en casa)</option>
+                            <option value="4-8">Entre 4 y 8 horas diarias</option>
+                            <option value="mas-8">Más de 8 horas diarias</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="pub-experiencia">Experiencia previa con mascotas / ¿Tienes otras mascotas actualmente?</label>
+                        <textarea id="pub-experiencia" class="form-control" rows="2" placeholder="Cuéntanos si tienes otros perros, gatos, si están esterilizados, etc."></textarea>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="pub-motivo">¿Por qué deseas adoptar a esta mascota? *</label>
+                        <textarea id="pub-motivo" class="form-control" rows="3" required placeholder="Cuéntanos qué te motivó a elegirla y cómo imaginas su vida en tu hogar..."></textarea>
+                    </div>
+
+                    <div class="form-group checkbox-group" style="margin-top: 1rem;">
+                        <label class="custom-checkbox">
+                            <input type="checkbox" id="pub-acepto-ley" required>
+                            <span>Declaro que la información proporcionada es verídica y me comprometo a cumplir con las normas de tenencia responsable de la Ley 21.020 (vacunación, esterilización, alimentación y no abandono).</span>
+                        </label>
+                    </div>
+
+                    <div class="public-form-actions">
+                        <button type="button" class="btn btn-secondary" onclick="PublicAdoptions.showCatalog()">
+                            Cancelar
+                        </button>
+                        <button type="submit" class="btn btn-primary btn-lg" id="pub-btn-submit">
+                            🚀 Enviar mi Postulación a la Fundación
+                        </button>
+                    </div>
+                </form>
+            </div>
+
+            <!-- VISTA 3: CONFIRMACIÓN DE ENVÍO EXITOSO -->
+            <div id="public-view-success" class="public-view" style="display: none;">
+                <div class="public-success-card">
+                    <div class="success-icon-badge">🎉</div>
+                    <h2>¡Tu postulación ha sido enviada con éxito!</h2>
+                    <p class="success-folio-text">Código de seguimiento: <strong id="pub-success-folio">CUE-0000</strong></p>
+                    <div class="success-details-box">
+                        <p>🐾 <strong>Mascota postulada:</strong> <span id="pub-success-animal">Mascota</span></p>
+                        <p>👤 <strong>Postulante:</strong> <span id="pub-success-nombre">Nombre</span></p>
+                        <p>📞 <strong>Teléfono registrado:</strong> <span id="pub-success-tel">Teléfono</span></p>
+                    </div>
+                    <div class="success-notice-box">
+                        <h4>¿Qué sucede a continuación?</h4>
+                        <p>1. La directiva de la Fundación Amor de Cuatro Patas revisará tu postulación y las condiciones de tenencia responsable.</p>
+                        <p>2. Te contactaremos vía <strong>WhatsApp o llamada telefónica</strong> al número registrado para coordinar una entrevista o visita previa.</p>
+                        <p>3. Una vez aprobada, se formalizará el Contrato de Adopción Oficial con entrega de su carnet sanitario.</p>
+                    </div>
+                    <button type="button" class="btn btn-accent btn-lg" onclick="PublicAdoptions.showCatalog()">
+                        🐾 Volver al Catálogo de Mascotas
+                    </button>
+                </div>
+            </div>
+        </main>
+
+        <footer class="public-footer">
+            <p>© 2026 Fundación Amor de Cuatro Patas • Todos los derechos reservados • Compromiso A+S</p>
+        </footer>
     </section>
 
     <div id="secured-app" hidden>
@@ -165,6 +377,9 @@
                             <span>Supabase Cloud Conectado</span>
                         </span>
                     </div>
+                    <button type="button" class="btn btn-secondary btn-sm" onclick="AuthModule.showPublicPortal()" title="Ver la web pública de adopción tal como la ven los ciudadanos" style="display: inline-flex; align-items: center; gap: 0.35rem;">
+                        🌐 Ver Portal de Adopción
+                    </button>
                     <div class="user-profile-badge">
                         <span class="user-avatar">👤</span>
                         <div class="user-info">

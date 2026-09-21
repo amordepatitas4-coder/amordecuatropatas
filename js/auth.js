@@ -32,11 +32,29 @@ const AuthModule = {
             }
         }
 
-        if (session && Date.now() - session.lastActivity < this.MAX_IDLE_MS) {
+        const hash = window.location.hash || '';
+        const isAdminRoute = hash.startsWith('#admin') || hash.startsWith('#login') || hash.startsWith('#ingreso');
+        const isInternalAppRoute = ['#dashboard', '#animales', '#salud', '#hogares', '#adopciones', '#esterilizaciones', '#gastos', '#documentos', '#difusion', '#reportes'].some(r => hash.startsWith(r));
+
+        // Extraer posible animalId desde hash (ej: #postular?animal=anim-123)
+        const match = hash.match(/animal=([a-zA-Z0-9_-]+)/);
+        const animalId = match ? match[1] : null;
+
+        if (isAdminRoute) {
+            // Solicitud explícita de inicio de sesión administrativo
+            if (session && Date.now() - session.lastActivity < this.MAX_IDLE_MS) {
+                this.activateSession(session);
+            } else {
+                this.clearSession();
+                this.showLogin();
+            }
+        } else if (session && Date.now() - session.lastActivity < this.MAX_IDLE_MS && isInternalAppRoute) {
+            // Usuaria autorizada navegando una sección interna del sistema
             this.activateSession(session);
         } else {
-            this.clearSession();
-            this.showLogin();
+            // COMPORTAMIENTO PREDETERMINADO:
+            // Abrir automáticamente el Portal Ciudadano de Adopción para cualquier visitante
+            this.showPublicPortal(animalId);
         }
         ['click', 'keydown', 'pointerdown'].forEach(eventName => {
             document.addEventListener(eventName, () => this.touchSession(), { passive: true });
@@ -162,6 +180,8 @@ const AuthModule = {
     },
 
     activateSession(session) {
+        const publicPortal = document.getElementById('public-portal');
+        if (publicPortal) publicPortal.hidden = true;
         document.getElementById('auth-gate').hidden = true;
         document.getElementById('secured-app').hidden = false;
         document.getElementById('user-active-name').textContent = session.displayName;
@@ -170,7 +190,45 @@ const AuthModule = {
         window.App.init();
     },
 
+    showPublicPortal(animalId = null) {
+        const publicPortal = document.getElementById('public-portal');
+        const authGate = document.getElementById('auth-gate');
+        const securedApp = document.getElementById('secured-app');
+
+        if (authGate) authGate.hidden = true;
+        if (securedApp) securedApp.hidden = true;
+        if (publicPortal) publicPortal.hidden = false;
+
+        // Actualizar botón de acceso directiva en el encabezado público
+        const authActions = document.getElementById('public-auth-actions');
+        const session = this.getSession();
+        if (authActions) {
+            if (session && Date.now() - session.lastActivity < this.MAX_IDLE_MS) {
+                authActions.innerHTML = `
+                    <button type="button" class="btn btn-accent btn-sm" onclick="AuthModule.activateSession(AuthModule.getSession())" title="Ir al panel de gestión interna">
+                        📊 Panel Directiva (${session.displayName})
+                    </button>
+                    <button type="button" class="btn btn-secondary btn-sm" onclick="AuthModule.logout()" title="Cerrar sesión actual">
+                        🚪 Salir
+                    </button>
+                `;
+            } else {
+                authActions.innerHTML = `
+                    <button type="button" class="btn btn-secondary btn-sm" onclick="AuthModule.showLogin()">
+                        🔒 Ingreso Equipo / Directiva
+                    </button>
+                `;
+            }
+        }
+
+        if (window.PublicAdoptions) {
+            window.PublicAdoptions.init(animalId);
+        }
+    },
+
     showSetup() {
+        const publicPortal = document.getElementById('public-portal');
+        if (publicPortal) publicPortal.hidden = true;
         document.getElementById('secured-app').hidden = true;
         document.getElementById('auth-gate').hidden = false;
         document.getElementById('auth-setup-panel').hidden = false;
@@ -178,6 +236,8 @@ const AuthModule = {
     },
 
     showLogin(message = '') {
+        const publicPortal = document.getElementById('public-portal');
+        if (publicPortal) publicPortal.hidden = true;
         document.getElementById('secured-app').hidden = true;
         document.getElementById('auth-gate').hidden = false;
         document.getElementById('auth-setup-panel').hidden = true;
